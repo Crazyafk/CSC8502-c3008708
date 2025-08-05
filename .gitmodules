@@ -1,0 +1,9 @@
+[submodule "NCLCoreClasses"]
+	path = NCLCoreClasses
+	url = https://github.com/RichDavisonNCL/NCLCoreClasses.git
+[submodule "OpenGLRendering"]
+	path = OpenGLRendering
+	url = https://github.com/RichDavisonNCL/OpenGLRendering
+[submodule "GLTFLoader"]
+	path = GLTFLoader
+	url = https://github.com/RichDavisonNCL/GLTFLoader
