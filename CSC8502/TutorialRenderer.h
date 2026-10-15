@@ -41,7 +41,7 @@ namespace NCL::CSC8502 {
 		void BindBufferAsSSBO(const OGLBuffer& b, GLuint slotID);
 
 		void SetCameraUniforms(const Camera& c, GLuint slot);
-		void SetLightUniforms(const Light& l, GLuint slot);
+		//void SetLightUniforms(const Light& l, GLuint slot);
 
 		void CalculateNormals(Mesh& m) const;
 		void CalculateNormalsTangents(Mesh& m) const;
@@ -52,7 +52,7 @@ namespace NCL::CSC8502 {
 
 		Camera* defaultCamera;
 
-		//GLTFLoader gltf;
+		GLTFLoader gltf;
 
 		float totalRunTime;
 	};

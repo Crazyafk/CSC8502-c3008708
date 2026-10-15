@@ -6,9 +6,11 @@ License: MIT (see LICENSE file at the top of the source tree)
 *//////////////////////////////////////////////////////////////////////////////
 #include "TutorialRenderer.h"
 #include "GLTFLoader.h"
+
+
 namespace NCL::Rendering {
-	#include "./Shaders/ShaderInterop.h"
-	#include "./Shaders/LightStruct.h"
+	#include "./Shaders/glslInterop.h"
+//	#include "./Shaders/LightStruct.h"
 }
 
 using namespace NCL;
@@ -19,13 +21,25 @@ OpenGLTutorialEntry* OpenGLTutorialEntry::s_listStartPtr = nullptr;
 
 TutorialRenderer::TutorialRenderer() : OGLRenderer(*Window::GetWindow())
 {
+	//GLTFLoader::SetMeshConstructionFunction(
+	//	[&]()-> std::shared_ptr<Mesh> {return std::shared_ptr<Mesh>(new OGLMesh()); }
+	//);
+
+	////GLTFLoader::SetTextureConstructionFunction(
+	////	[&](std::string& input) ->  SharedTexture {return std::shared_ptr<Texture>(LoadTexture(input).release()); }
+	////);
+
+	GLTFLoader::SetTextureConstructionFunction(
+		[&](std::string& input) ->  SharedTexture {
+			OGLTexture* texture = new OGLTexture(*(LoadTexture(input).release()));
+			return std::shared_ptr<Texture>(texture);
+		}
+	);
+
 	GLTFLoader::SetMeshConstructionFunction(
 		[&]()-> std::shared_ptr<Mesh> {return std::shared_ptr<Mesh>(new OGLMesh()); }
 	);
 
-	//GLTFLoader::SetTextureConstructionFunction(
-	//	[&](std::string& input) ->  SharedTexture {return std::shared_ptr<Texture>(LoadTexture(input).release()); }
-	//);
 
 
 	triMesh		= CreateTriangle();
@@ -258,14 +272,14 @@ void TutorialRenderer::BindBufferAsSSBO(const OGLBuffer& b, GLuint slotID) {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, slotID, b.gpuID);
 }
 
-void TutorialRenderer::SetLightUniforms(const Light& l, GLuint location) {
-	assert(m_boundShader);
-	GLuint id = m_boundShader->GetProgramID();
-
-	glUniform3fv(location	, 1, (float*)&l.position);
-	glUniform1f(location + 1, l.radius);
-	glUniform3fv(location + 2, 1, (float*)&l.intensity);
-}
+//void TutorialRenderer::SetLightUniforms(const Light& l, GLuint location) {
+//	assert(m_boundShader);
+//	GLuint id = m_boundShader->GetProgramID();
+//
+//	glUniform3fv(location	, 1, (float*)&l.position);
+//	glUniform1f(location + 1, l.radius);
+//	glUniform3fv(location + 2, 1, (float*)&l.intensity);
+//}
 
 void TutorialRenderer::BindTextureToPipeline(GLuint texID, const std::string& name, GLuint texUnit, GLuint texType)  {
 	assert(m_boundShader);
