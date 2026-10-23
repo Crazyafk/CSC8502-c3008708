@@ -52,7 +52,7 @@ namespace NCL::CSC8502 {
 
 		Camera* defaultCamera;
 
-		GLTFLoader gltf;
+		GLTFScene gltf;
 
 		float totalRunTime;
 	};

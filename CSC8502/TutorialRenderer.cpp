@@ -7,7 +7,6 @@ License: MIT (see LICENSE file at the top of the source tree)
 #include "TutorialRenderer.h"
 #include "GLTFLoader.h"
 
-
 namespace NCL::Rendering {
 	#include "./Shaders/glslInterop.h"
 //	#include "./Shaders/LightStruct.h"
@@ -21,26 +20,15 @@ OpenGLTutorialEntry* OpenGLTutorialEntry::s_listStartPtr = nullptr;
 
 TutorialRenderer::TutorialRenderer() : OGLRenderer(*Window::GetWindow())
 {
-	//GLTFLoader::SetMeshConstructionFunction(
-	//	[&]()-> std::shared_ptr<Mesh> {return std::shared_ptr<Mesh>(new OGLMesh()); }
-	//);
-
-	////GLTFLoader::SetTextureConstructionFunction(
-	////	[&](std::string& input) ->  SharedTexture {return std::shared_ptr<Texture>(LoadTexture(input).release()); }
-	////);
-
 	GLTFLoader::SetTextureConstructionFunction(
 		[&](std::string& input) ->  SharedTexture {
-			OGLTexture* texture = new OGLTexture(*(LoadTexture(input).release()));
-			return std::shared_ptr<Texture>(texture);
+			return std::shared_ptr<Texture>(OGLTexture::TextureFromFile(input));
 		}
 	);
 
 	GLTFLoader::SetMeshConstructionFunction(
 		[&]()-> std::shared_ptr<Mesh> {return std::shared_ptr<Mesh>(new OGLMesh()); }
 	);
-
-
 
 	triMesh		= CreateTriangle();
 	quadMesh	= CreateQuad();
