@@ -6,6 +6,7 @@ License: MIT (see LICENSE file at the top of the source tree)
 *//////////////////////////////////////////////////////////////////////////////
 #include "TutorialRenderer.h"
 #include "GLTFLoader.h"
+#include "../NCLCoreClasses/KeyboardMouseController.h"
 
 namespace NCL::Rendering {
 	#include "./Shaders/glslInterop.h"
@@ -35,7 +36,17 @@ TutorialRenderer::TutorialRenderer() : OGLRenderer(*Window::GetWindow())
 	sphereMesh	= LoadSingleMesh("uvSphere.gltf");
 
 	defaultCamera	= new PerspectiveCamera();
-	totalRunTime	= 0;
+
+	controller = new KeyboardMouseController(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse());
+	
+	controller->MapAxis(0, "Sidestep");
+	controller->MapAxis(1, "UpDown");
+	controller->MapAxis(2, "Forward");
+
+	controller->MapAxis(3, "XLook");
+	controller->MapAxis(4, "YLook");
+	
+	defaultCamera->SetController(*controller);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -47,7 +58,8 @@ TutorialRenderer::~TutorialRenderer() {
 
 void TutorialRenderer::Update(float dt) {
 	defaultCamera->UpdateCamera(dt);
-	totalRunTime += dt;
+	frameTime		= dt;
+	totalRunTime	+= dt;
 }
 
 UniqueOGLMesh TutorialRenderer::CreateTriangle() {
@@ -294,4 +306,12 @@ TutorialRenderer* TutorialRenderer::CreateTutorial(const std::string& name) {
 	}
 	std::cout << "Cannot find tutorial " << name << "!\n";
 	return nullptr;
+}
+
+void TutorialRenderer::WindowEventHandler(WindowEvent e, uint32_t w, uint32_t h) {
+	if (e == WindowEvent::Minimize || e == WindowEvent::Maximize) {
+	}
+	if (e == WindowEvent::Resize || e == WindowEvent::Maximize) {
+		OnWindowResize(w, h);
+	}
 }

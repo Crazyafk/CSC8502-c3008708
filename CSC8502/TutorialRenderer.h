@@ -25,6 +25,8 @@ namespace NCL::CSC8502 {
 
 		static TutorialRenderer* CreateTutorial(const std::string& name);
 
+		void WindowEventHandler(NCL::WindowEvent e, uint32_t w, uint32_t h);
+
 	protected:
 		UniqueOGLMesh CreateTriangle();
 		UniqueOGLMesh CreateQuad();
@@ -52,9 +54,12 @@ namespace NCL::CSC8502 {
 
 		Camera* defaultCamera;
 
+		Controller* controller;
+
 		GLTFScene gltf;
 
-		float totalRunTime;
+		float totalRunTime	= 0.0f;
+		float frameTime		= 0.0f;
 	};
 }
 
