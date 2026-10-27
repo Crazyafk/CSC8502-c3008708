@@ -13,9 +13,10 @@ using namespace CSC8502;
 TUTORIAL_ENTRY(TestProgram)
 
 TestProgram::TestProgram() : TutorialRenderer(),
-	frameConstants(1)
+	frameConstants(1),
+	skeletonShader("SkinningVertex.glsl", "TexturedFragment.glsl"),
+	staticShader("staticVertex.glsl", "TexturedFragment.glsl")
 {
-
 	GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", animatedScene);
 	GLTFLoader::Load("../GLTF/DamagedHelmet/DamagedHelmet.gltf", staticScene);
 
@@ -27,9 +28,9 @@ TestProgram::TestProgram() : TutorialRenderer(),
 		m->UploadToGPU(this);
 	}
 
-	skeletonShader = std::make_unique<OGLShader>("SkinningVertex.glsl", "TexturedFragment.glsl");
-
-	staticShader = std::make_unique<OGLShader>("staticVertex.glsl", "TexturedFragment.glsl");
+	defaultCamera->SetPosition({ -0.5f, 1.5, -3.0f })
+		.SetPitch(0.0f)
+		.SetYaw(180.0f);
 }
 
 void TestProgram::RenderFrame() {
@@ -52,9 +53,7 @@ void TestProgram::DrawStaticScene() {
 	//Mesh material n relates to mesh n
 	GLTFMeshMaterials	material = staticScene.meshMaterials[0];
 
-	BindShader(*staticShader);
-
-	glUniform1i(glGetUniformLocation(staticShader->GetProgramID(), "diffuseTex"), 0);
+	BindShader(staticShader);
 
 	Matrix4 modelMatrix = Matrix::Translation(Vector3{ -1,1.5,0 })
 		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
@@ -63,6 +62,7 @@ void TestProgram::DrawStaticScene() {
 
 	SetUniform("modelMatrix", modelMatrix);
 
+	glUniform1i(glGetUniformLocation(staticShader.GetProgramID(), "diffuseTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	BindMesh(*mesh);
 	for (int i = 0; i < mesh->GetSubMeshCount(); ++i) {
@@ -87,52 +87,44 @@ void TestProgram::DrawAnimatedScene() {
 
 	skeleton.resize(anim->GetJointCount());
 
-	frameTime -= frameTime;
+	animTime -= frameTime;
 
-	if (frameTime <= 0) {
+	if (animTime <= 0) {
 		currentFrame++;
 
-		frameTime += 1.0f / anim->GetFrameRate();
+		animTime += 1.0f / anim->GetFrameRate();
 		currentFrame = currentFrame % anim->GetFrameCount();
 
 		const std::vector<Matrix4> inverseBindPose = mesh->GetInverseBindPose();
 
-		const Matrix4* joints = anim->GetWorldMatrices(currentFrame);
+		std::span<const Maths::Matrix4> joints = anim->GetWorldMatrices(currentFrame);
 
 		for (int i = 0; i < skeleton.size(); ++i) {
 			skeleton[i] = joints[i] * inverseBindPose[i];
 		}
 	}
 
-	BindShader(*skeletonShader);
-	glUniform1i(glGetUniformLocation(skeletonShader->GetProgramID(), "diffuseTex"), 0);
+	BindShader(skeletonShader);
 
 	Matrix4 modelMatrix = Matrix::Translation(Vector3{ 0,0,0 })
 		* Matrix::Rotation(90.0f, Vector3(0, 1, 0))
 		* Matrix::Rotation(270.0f, Vector3(1, 0, 0))
 		* Matrix::Scale(Vector3{ 1,1,1 });
 
-	//std::vector<Matrix4> frameMatrices;
-	//frameMatrices.resize(mesh->GetJointCount());
+	SetUniform("modelMatrix", modelMatrix);
 
-	//const Matrix4* invBindPose = mesh->GetInverseBindPose();
-	//const Matrix4* frameData = anim->GetJointData(currentFrame);
+	int j = glGetUniformLocation(skeletonShader.GetProgramID(), "joints");
+	glUniformMatrix4fv(j, skeleton.size(), false,(float*)skeleton.data());
 
-	//for (unsigned int i = 0; i < mesh->GetJointCount(); ++i) {
-	//	frameMatrices[i] = (frameData[i] * invBindPose[i]);
-	//}
-
-	int j = glGetUniformLocation(skeletonShader->GetProgramID(), "joints");
-	glUniformMatrix4fv(j, skeleton.size(), false,
-		(float*)skeleton.data());
-
+	glUniform1i(glGetUniformLocation(skeletonShader.GetProgramID(), "diffuseTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
+
 	BindMesh(*mesh);
 	for (int i = 0; i < mesh->GetSubMeshCount(); ++i) {
 		//Material layer n relates to submesh n
-		GLTFMaterial& layer = staticScene.materials[material.layers[i]];
+		GLTFMaterial& layer = animatedScene.materials[material.layers[i]];
 
-		OGLTexture* albedoTex = (OGLTexture*)staticScene.textures[layer.albedo].get();
+		OGLTexture* albedoTex = (OGLTexture*)animatedScene.textures[layer.albedo].get();
 
 		glBindTexture(GL_TEXTURE_2D, albedoTex->GetObjectID());
 		DrawBoundMesh(i);

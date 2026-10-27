@@ -23,8 +23,8 @@ namespace NCL::CSC8502 {
 		void DrawStaticScene();
 		void DrawAnimatedScene();
 
-		UniqueOGLShader skeletonShader;
-		UniqueOGLShader staticShader;
+		OGLShader skeletonShader;
+		OGLShader staticShader;
 
 		StructuredOGLBuffer< FrameConstants> frameConstants;
 
@@ -34,5 +34,7 @@ namespace NCL::CSC8502 {
 		GLTFScene staticScene;
 
 		int currentFrame = 0;
+
+		float animTime = 0.0f;
 	};
 }
