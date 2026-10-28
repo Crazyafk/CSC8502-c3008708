@@ -13,6 +13,7 @@ License: MIT (see LICENSE file at the top of the source tree)
 #include "OGLTexture.h"
 
 #include "../NCLCoreClasses/Camera.h"
+#include "../NCLCoreClasses/Window.h"
 
 namespace NCL::Rendering {
 	struct Light;
