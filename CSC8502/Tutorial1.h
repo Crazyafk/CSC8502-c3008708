@@ -6,6 +6,7 @@ License: MIT (see LICENSE file at the top of the source tree)
 *//////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "TutorialRenderer.h"
+
 namespace NCL::CSC8502 {
 	using namespace Rendering;
 	class Tutorial1 : public TutorialRenderer {

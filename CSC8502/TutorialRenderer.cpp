@@ -8,6 +8,8 @@ License: MIT (see LICENSE file at the top of the source tree)
 #include "GLTFLoader.h"
 #include "../NCLCoreClasses/KeyboardMouseController.h"
 
+#include <cassert>
+
 namespace NCL::Rendering {
 	#include "./Shaders/glslInterop.h"
 //	#include "./Shaders/LightStruct.h"

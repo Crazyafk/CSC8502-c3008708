@@ -5,6 +5,7 @@ Contact:richgdavison@gmail.com
 License: MIT (see LICENSE file at the top of the source tree)
 *//////////////////////////////////////////////////////////////////////////////
 #include "../NCLCoreClasses/Window.h"
+#include "../NCLCoreClasses/GameTimer.h"
 #include "TutorialRenderer.h"
 
 using namespace NCL;

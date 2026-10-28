@@ -8,6 +8,11 @@ License: MIT (see LICENSE file at the top of the source tree)
 #include "OGLRenderer.h"
 #include "GLTFLoader.h"
 #include "OGLBuffer.h"
+#include "OGLMesh.h"
+#include "OGLShader.h"
+#include "OGLTexture.h"
+
+#include "../NCLCoreClasses/Camera.h"
 
 namespace NCL::Rendering {
 	struct Light;
