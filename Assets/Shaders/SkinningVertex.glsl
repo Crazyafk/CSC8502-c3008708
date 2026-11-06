@@ -1,6 +1,6 @@
 #version 420
-#include "Attributes.h"
-#include "TestStructs.h"
+#include "Attributes.glslh"
+#include "TestStructs.glslh"
 
 uniform mat4 modelMatrix;
 
@@ -24,7 +24,7 @@ void main(void) {
 
         skelPos += joints[jointIndex] * localPos * jointWeight;
     }
-    mat4 mvp = frameConstants.projMatrix * frameConstants.viewMatrix * modelMatrix;
+    mat4 mvp = frameConstants.viewProjMatrix  * modelMatrix;
     gl_Position = mvp * vec4(skelPos.xyz, 1.0);
     OUT.texCoord = texCoord;
 }
