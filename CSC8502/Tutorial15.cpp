@@ -15,30 +15,30 @@ TUTORIAL_ENTRY(Tutorial15)
 const int LIGHT_COUNT = 64;
 
 Tutorial15::Tutorial15() : TutorialRenderer(){
-	sceneAlbedoTex = CreateTexture(windowSize.x, windowSize.y, GL_RGBA8);
+	sceneAlbedoTex	= CreateTexture(windowSize.x, windowSize.y, GL_RGBA8);
 	sceneNormalsTex = CreateTexture(windowSize.x, windowSize.y, GL_RGBA8);
-	sceneDepthTex = CreateTexture(windowSize.x, windowSize.y, GL_DEPTH_COMPONENT24);
+	sceneDepthTex	= CreateTexture(windowSize.x, windowSize.y, GL_DEPTH_COMPONENT24);
 
-	lightDiffuseTex = CreateTexture(windowSize.x, windowSize.y, GL_RGBA16F);
-	lightSpecularTex = CreateTexture(windowSize.x, windowSize.y, GL_RGBA16F);
+	lightDiffuseTex		= CreateTexture(windowSize.x, windowSize.y, GL_RGBA16F);
+	lightSpecularTex	= CreateTexture(windowSize.x, windowSize.y, GL_RGBA16F);
 
-	gBufferShader = std::make_unique<OGLShader>("GBufferFill.vert", "GBufferFill.frag");
-	lightingShader = std::make_unique<OGLShader>("DeferredLighting.vert", "DeferredLighting.frag");
-	displayShader = std::make_unique<OGLShader>("DeferredDisplay.vert", "DeferredDisplay.frag");
+	gBufferShader	= std::make_unique<OGLShader>("GBufferFill.vert", "GBufferFill.frag");
+	lightingShader	= std::make_unique<OGLShader>("DeferredLighting.vert", "DeferredLighting.frag");
+	displayShader	= std::make_unique<OGLShader>("DeferredDisplay.vert", "DeferredDisplay.frag");
+	 
+	for (int i = 0; i < LIGHT_COUNT; ++i) {
+		Light& l = lights.elements[i];
+		l.position.x = Maths::RandomValue(-1024, 1024);
+		l.position.y = 10.0f + Maths::RandomValue(0, 32);
+		l.position.z = Maths::RandomValue(-1024, 1024);
 
-	//for (int i = 0; i < LIGHT_COUNT; ++i) {
-	//	Light& l = lights.elements[i];
-	//	l.position.x = Maths::RandomValue(-1024, 1024);
-	//	l.position.y = 10.0f + Maths::RandomValue(0, 32);
-	//	l.position.z = Maths::RandomValue(-1024, 1024);
+		l.intensity.x = Maths::RandomValue(100.0f, 1000.0f);
+		l.intensity.y = Maths::RandomValue(100.0f, 1000.0f);
+		l.intensity.z = Maths::RandomValue(100.0f, 1000.0f);
 
-	//	l.intensity.x = Maths::RandomValue(100.0f, 1000.0f);
-	//	l.intensity.y = Maths::RandomValue(100.0f, 1000.0f);
-	//	l.intensity.z = Maths::RandomValue(100.0f, 1000.0f);
-
-	//	l.radius = Maths::RandomValue(100.0f, 250.0f);
-	//}
-	//lights.GPUSync();
+		l.radius = Maths::RandomValue(100.0f, 250.0f);
+	}
+	lights.GPUSync();
 
 	glGenFramebuffers(1, &gBufferFBO);
 	glGenFramebuffers(1, &lightingFBO);
@@ -105,8 +105,8 @@ void Tutorial15::FillGBufferPass() {
 	SetCameraUniforms(*defaultCamera, 0);
 	BindTextureToPipeline(albedoTex->GetObjectID(), "albedoTex", 0);
 	BindTextureToPipeline(bumpTex->GetObjectID(), "bumpTex", 1);
-	SetUniform("modelMatrix", Matrix4());
-	BindMesh(*heightmap);
+	SetUniform("modelMatrix", Matrix::Scale(Vector3{100,100,100}));
+	BindMesh(*quadMesh);
 	DrawBoundMesh();
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -121,7 +121,7 @@ void Tutorial15::LightRenderPass() {
 	glCullFace(GL_FRONT);
 
 	BindShader(*lightingShader);
-	//BindBufferAsSSBO(lights, 0);
+	BindBufferAsSSBO(lights, 0);
 	SetCameraUniforms(*defaultCamera, 0);
 	BindTextureToPipeline(sceneDepthTex, "depthTex", 0);
 	BindTextureToPipeline(sceneNormalsTex, "normTex", 1);

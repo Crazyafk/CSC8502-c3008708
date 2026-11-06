@@ -6,6 +6,11 @@ License: MIT (see LICENSE file at the top of the source tree)
 *//////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "TutorialRenderer.h"
+
+#include "./Shaders/glslinterop.h"
+#include "./Shaders/LightStruct.h"
+
+
 namespace NCL::CSC8502 {
 	using namespace Rendering;
 	class Tutorial15 : public TutorialRenderer {
@@ -20,7 +25,7 @@ namespace NCL::CSC8502 {
 		void LightRenderPass();
 		void DisplayPass();
 
-		//StructuredOGLBuffer<Light> lights;
+		StructuredOGLBuffer<Light> lights;
 
 		GLuint	gBufferFBO;
 		GLuint	lightingFBO;

@@ -15,10 +15,6 @@ License: MIT (see LICENSE file at the top of the source tree)
 #include "../NCLCoreClasses/Camera.h"
 #include "../NCLCoreClasses/Window.h"
 
-namespace NCL::Rendering {
-	struct Light;
-}
-
 namespace NCL::CSC8502 {
 	using namespace Rendering;
 

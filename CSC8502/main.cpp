@@ -74,13 +74,15 @@ int main(int argc, char* argv[]) {
 			tutorial->WindowEventHandler(e, w, h);
 		}
 	);
-
+	
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE)) {
 		float time = w->GetTimer().GetTimeDeltaSeconds();
+		if (time > 0.25f) {
+			continue; //Skip large dts
+		}
 		tutorial->Update(time);
 		tutorial->Render();
 	}
-//	tutorial->Finish();
 
 	Window::DestroyGameWindow();
 

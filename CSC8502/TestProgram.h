@@ -8,7 +8,7 @@ License: MIT (see LICENSE file at the top of the source tree)
 #include "TutorialRenderer.h"
 
 #include "./Shaders/glslinterop.h"
-#include "./Shaders/TestStructs.h"
+#include "./Shaders/TestStructs.glslh"
 
 namespace NCL::CSC8502 {
 	using namespace Rendering;

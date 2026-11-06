@@ -36,11 +36,11 @@ TestProgram::TestProgram() : TutorialRenderer(),
 void TestProgram::RenderFrame() {
 	BindBufferAsUBO(frameConstants, 0); //0 Matches the binding hard-coded binding in staticVertex.glsl
 
-	frameConstants.elements[0].viewMatrix	= defaultCamera->BuildViewMatrix();
-	frameConstants.elements[0].projMatrix	= defaultCamera->BuildProjectionMatrix();
-
-	frameConstants.elements[0].frameTime	= frameTime;
-	frameConstants.elements[0].totalTime	= totalRunTime;
+	frameConstants.elements[0].viewMatrix		= defaultCamera->BuildViewMatrix();
+	frameConstants.elements[0].projMatrix		= defaultCamera->BuildProjectionMatrix();
+	frameConstants.elements[0].viewProjMatrix	= defaultCamera->BuildProjectionMatrix() * defaultCamera->BuildViewMatrix();
+	frameConstants.elements[0].frameTime		= frameTime;
+	frameConstants.elements[0].totalTime		= totalRunTime;
 
 	frameConstants.GPUSync();
 
