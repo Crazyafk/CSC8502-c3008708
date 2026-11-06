@@ -25,6 +25,8 @@ find_package(Vulkan REQUIRED)
 set(ASSET_ROOT "${CMAKE_SOURCE_DIR}/Assets/" CACHE STRING "" FORCE)
 add_compile_definitions(ASSETROOTLOCATION="${ASSET_ROOT}") 
 
+#set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
+
 if(MSVC)
     add_compile_definitions("NOMINMAX")
     add_compile_definitions("WIN32_LEAN_AND_MEAN")  
