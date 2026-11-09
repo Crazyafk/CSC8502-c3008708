@@ -19,7 +19,7 @@ int main(int argc, char* argv[]) {
 		.windowTitle = "Welcome to OpenGL!",
 	};
 
-	std::string example = "Tutorial1";
+	std::string example = "TestProgram";
 
 	bool lockCursor = false;
 
