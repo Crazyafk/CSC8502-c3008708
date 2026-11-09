@@ -20,7 +20,7 @@ endif()
 ################################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-find_package(Vulkan REQUIRED)
+#find_package(Vulkan REQUIRED)
 
 set(ASSET_ROOT "${CMAKE_SOURCE_DIR}/Assets/" CACHE STRING "" FORCE)
 add_compile_definitions(ASSETROOTLOCATION="${ASSET_ROOT}") 
@@ -37,9 +37,10 @@ endif()
 ################################################################################
 add_subdirectory(NCLCoreClasses)
 add_subdirectory(GLTFLoader)
-add_subdirectory(CSC8502)
+#add_subdirectory(CSC8502)
 add_subdirectory(OpenGLRendering)
+add_subdirectory(Project)
 
 if(MSVC)
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CSC8502)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Project)
 endif()
