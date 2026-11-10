@@ -24,6 +24,8 @@ namespace Project {
 		virtual void Update(float dt);
 
 		void WindowEventHandler(NCL::WindowEvent e, uint32_t w, uint32_t h);
+
+		Camera& GetDefaultCamera() { return *defaultCamera; }
 	protected:
 		UniqueOGLMesh CreateTriangle();
 		UniqueOGLMesh CreateQuad();

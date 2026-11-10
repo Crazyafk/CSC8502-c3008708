@@ -9,6 +9,8 @@ using namespace NCL;
 using namespace Rendering;
 using namespace Project;
 
+static const float defaultCamSpeed = 10;
+
 int main(int argc, char* argv[]) {
 	NCL::WindowInitialisation winInit = {
 		.width = 1120,
@@ -63,6 +65,8 @@ int main(int argc, char* argv[]) {
 	if (!renderer->HasInitialised()) {
 		return -1;
 	}
+
+	renderer->GetDefaultCamera().SetSpeed(defaultCamSpeed);
 
 	w->SetWindowEventHandler(
 		[&](WindowEvent e, uint32_t w, uint32_t h) {
