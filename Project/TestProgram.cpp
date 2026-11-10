@@ -1,8 +1,5 @@
 /******************************************************************************
-This file is part of the Newcastle OpenGL Tutorial Series
-Author:Rich Davison
-Contact:richgdavison@gmail.com
-License: MIT (see LICENSE file at the top of the source tree)
+Adapted from CSC8052/TestProgram
 *//////////////////////////////////////////////////////////////////////////////
 #include "TestProgram.h"
 
