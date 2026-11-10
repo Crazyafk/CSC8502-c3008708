@@ -3,7 +3,7 @@ Adapted from CSC8502/main
 *//////////////////////////////////////////////////////////////////////////////
 #include "../NCLCoreClasses/Window.h"
 #include "../NCLCoreClasses/GameTimer.h"
-#include "Renderer.h"
+#include "TestProgram.h"
 
 using namespace NCL;
 using namespace Rendering;
@@ -58,7 +58,11 @@ int main(int argc, char* argv[]) {
 
 	w->LockMouseToWindow(lockCursor);
 
-	std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>();
+	std::unique_ptr<TestProgram> renderer = std::make_unique<TestProgram>();
+
+	if (!renderer->HasInitialised()) {
+		return -1;
+	}
 
 	w->SetWindowEventHandler(
 		[&](WindowEvent e, uint32_t w, uint32_t h) {
@@ -69,7 +73,7 @@ int main(int argc, char* argv[]) {
 	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyCodes::ESCAPE)) {
 		float time = w->GetTimer().GetTimeDeltaSeconds();
 		if (time > 0.25f) {
-			continue; //Skip large dts
+			//continue; //Skip large dts
 		}
 		renderer->Update(time);
 		renderer->Render();
