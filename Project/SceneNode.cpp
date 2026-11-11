@@ -17,6 +17,22 @@ SceneNode::SceneNode(const GLTFNode& base) : GLTFNode() {
 	children = base.children;
 }
 
+void SceneNode::Update(float frameTime) {
+	if (parent_p) {
+		worldMatrix = parent_p->worldMatrix * localMatrix;
+	}
+	else {			//Root Node!
+		worldMatrix = localMatrix;
+	}
+	for (SharedNode child : children_v){
+		child->Update(frameTime);
+	}
+}
+
+void SceneNode::Draw(const OGLRenderer& renderer) {
+
+}
+
 void SceneNode::AddChild(std::shared_ptr<SceneNode> child, SharedScene inScene) {
 	child->parent = nodeID;
 	child->parent_p = inScene->GetNode(nodeID);
@@ -73,7 +89,7 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, SharedSc
 		node.nodeID += firstNode;
 		node.meshID += firstMesh;
 		if (node.parent != -1) node.parent += firstNode;
-		for (int32_t child : node.children) {
+		for (int32_t& child : node.children) {
 			child += firstNode;
 		}
 	}

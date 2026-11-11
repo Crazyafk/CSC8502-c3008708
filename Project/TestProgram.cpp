@@ -19,7 +19,7 @@ TestProgram::TestProgram() : Renderer(),
 	GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", animatedScene);
 	GLTFLoader::Load("../GLTF/DamagedHelmet/DamagedHelmet.gltf", staticScene);
 
-	SharedScene scene = std::make_shared<Scene>();
+	scene = std::make_shared<Scene>();
 
 	SharedNode cesiumMan = SceneNode::FromGLTFScene(animatedScene, scene);
 	cesiumMan->SetLocalMatrix(Matrix::Translation(Vector3{ 0,0,0 })
@@ -52,6 +52,7 @@ void TestProgram::RenderFrame() {
 
 	frameConstants.GPUSync();
 
+	scene->Update(frameTime);
 	DrawStaticScene();
 	DrawAnimatedScene();
 }

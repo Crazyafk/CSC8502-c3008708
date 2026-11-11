@@ -3,6 +3,7 @@ Adapted from CSC8052/TestProgram
 *//////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "Renderer.h"
+#include "Scene.h"
 
 #include "./Shaders/glslinterop.h"
 #include "./Shaders/TestStructs.glslh"
@@ -28,6 +29,7 @@ namespace Project {
 
 		GLTFScene animatedScene;
 		GLTFScene staticScene;
+		SharedScene scene;
 
 		int currentFrame = 0;
 

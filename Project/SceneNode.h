@@ -1,6 +1,10 @@
 #pragma once
 #include "..\GLTFLoader\GLTFLoader.h"
 
+namespace NCL::Rendering {
+	class OGLRenderer;
+}
+
 namespace Project {
 	class Scene;
 	class SceneNode;
@@ -15,6 +19,9 @@ namespace Project {
 		SceneNode(std::string _name);
 		SceneNode(const GLTFNode& base);
 		~SceneNode() {};
+
+		void Update(float frameTime);
+		void Draw(const OGLRenderer& renderer);
 
 		static std::shared_ptr<SceneNode> FromGLTFScene(GLTFScene& _object, SharedScene parentScene, SharedNode setParent = nullptr);
 
@@ -40,8 +47,8 @@ namespace Project {
 		void SetAnimation(int32_t anim_id) { animation_id = anim_id; }
 	protected:
 		//named to not shadow the vars parent and children in the base class
-		std::shared_ptr<SceneNode> parent_p = nullptr;
-		std::vector<std::shared_ptr<SceneNode>> children_v;
+		SharedNode parent_p = nullptr;
+		std::vector<SharedNode> children_v;
 		int32_t animation_id = -1;
 	};
 }

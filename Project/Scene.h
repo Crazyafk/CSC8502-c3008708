@@ -16,6 +16,8 @@ namespace Project {
 
 		void UploadMeshes(RendererBase* renderer);
 
+		void Update(float frameTime) { root->Update(frameTime); };
+
 		size_t GetMeshesCount() { return meshes.size(); }
 		size_t GetAnimationsCount() { return animations.size(); }
 		size_t GetTexturesCount() { return textures.size(); }
