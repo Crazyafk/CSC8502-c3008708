@@ -40,6 +40,9 @@ void SceneNode::FindChildren(SharedScene inScene) {
 	}
 }
 
+SharedMesh SceneNode::GetMesh(SharedScene inScene) { return HasMesh() ? nullptr : inScene->GetMesh(meshID); }
+SharedMeshAnim SceneNode::GetAnimation(SharedScene inScene) { return isAnimated() ? nullptr : inScene->GetAnimation(animation_id); }
+
 /*
 * Integrates a GLTF Scene into the given parent scene and returns pointer to the node at the root of the GLTF Scene.
 * Note: Makes the given GLTF Scene invalid.

@@ -24,6 +24,7 @@ namespace Project {
 		size_t GetNodesCount() { return sceneNodes.size(); }
 
 		SharedMesh GetMesh(int32_t id) { return meshes[id]; }
+		SharedMeshAnim GetAnimation(int32_t id) { return animations[id]; }
 
 		friend SharedNode SceneNode::FromGLTFScene(GLTFScene& _object, SharedScene parentScene, SharedNode setParent);
 	protected:

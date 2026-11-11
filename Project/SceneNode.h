@@ -22,16 +22,21 @@ namespace Project {
 		void FindParent(SharedScene inScene);
 		void FindChildren(SharedScene inScene);
 
-		//bool HasMesh() { return meshID == -1; }
+		bool HasMesh() { return meshID != -1; }
+		bool isAnimated() { return animation_id != -1; }
+
+		// TODO: IS TRANSPARENT?? WE CAN DEAL WITH IT WHEN WE HAVE TRANSPARENT MESHES
 
 		std::string GetName() { return name; }
 		uint32_t GetID() { return nodeID; }
-		//SharedMesh GetMesh() { return HasMesh() ? nullptr : scene->GetMesh(meshID); }
+		SharedMesh GetMesh(SharedScene inScene);
+		SharedMeshAnim GetAnimation(SharedScene inScene);
 		Matrix4 GetLocalMatrix() { return localMatrix; }
 		Matrix4 GetWorldMatrix() { return worldMatrix; }
 	protected:
 		//named to not shadow the vars parent and children in the base class
 		std::shared_ptr<SceneNode> parent_p = nullptr;
 		std::vector<std::shared_ptr<SceneNode>> children_v;
+		int32_t animation_id = -1;
 	};
 }
