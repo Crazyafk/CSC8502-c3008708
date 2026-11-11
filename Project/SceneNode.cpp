@@ -63,7 +63,7 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, std::sha
 	int32_t firstTex = parentScene->GetTexturesCount();
 
 	//Step 2
-	for (GLTFNode node : _object.sceneNodes) {
+	for (GLTFNode& node : _object.sceneNodes) {
 		node.nodeID += firstNode;
 		node.meshID += firstMesh;
 		node.parent += firstNode;
@@ -74,10 +74,13 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, std::sha
 	for (auto const& pair : _object.skinningData) { //Assuming the key of skinning data is the node id? please leave more comments rich ;_;
 		parentScene->skinningData[pair.first + firstNode] = pair.second;
 	}
-	for (auto mat : _object.meshMaterials) {
+	for (auto& mat : _object.meshMaterials) {
 		for (auto layer : mat.layers) {
 			layer += firstMatLayer;
 		}
+	}
+	for (auto& node : _object.topLevelNodes) {
+		node += firstNode;
 	}
 	//Does anything else need to be offset? MAYBE
 

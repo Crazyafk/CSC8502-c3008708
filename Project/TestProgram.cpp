@@ -2,10 +2,15 @@
 Adapted from CSC8052/TestProgram
 *//////////////////////////////////////////////////////////////////////////////
 #include "TestProgram.h"
+#include "SceneNode.h"
+#include "Scene.h"
 
 using namespace NCL;
 using namespace Rendering;
 using namespace Project;
+
+typedef std::shared_ptr<Scene> SharedScene;
+typedef std::shared_ptr<SceneNode> SharedNode;
 
 TestProgram::TestProgram() : Renderer(),
 	frameConstants(1),
@@ -14,6 +19,10 @@ TestProgram::TestProgram() : Renderer(),
 {
 	GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", animatedScene);
 	GLTFLoader::Load("../GLTF/DamagedHelmet/DamagedHelmet.gltf", staticScene);
+
+	SharedScene scene = std::make_shared<Scene>();
+	SharedNode cesiumMan = SceneNode::FromGLTFScene(animatedScene, scene);
+	SharedNode helmet = SceneNode::FromGLTFScene(staticScene, scene);
 
 	for(const auto& m : animatedScene.meshes) {
 		m->UploadToGPU(this);
