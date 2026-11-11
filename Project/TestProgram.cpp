@@ -24,13 +24,7 @@ TestProgram::TestProgram() : Renderer(),
 	SharedNode cesiumMan = SceneNode::FromGLTFScene(animatedScene, scene);
 	SharedNode helmet = SceneNode::FromGLTFScene(staticScene, scene);
 
-	for(const auto& m : animatedScene.meshes) {
-		m->UploadToGPU(this);
-	}
-
-	for (const auto& m : staticScene.meshes) {
-		m->UploadToGPU(this);
-	}
+	scene->UploadMeshes(this);
 
 	defaultCamera->SetPosition({ -0.5f, 1.5, -3.0f })
 		.SetPitch(0.0f)

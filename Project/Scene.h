@@ -14,6 +14,8 @@ namespace Project {
 		SharedNode GetRoot() { return root; }
 		void AddNode(SharedNode node);
 
+		void UploadMeshes(RendererBase* renderer);
+
 		size_t GetMeshesCount() { return meshes.size(); }
 		size_t GetAnimationsCount() { return animations.size(); }
 		size_t GetTexturesCount() { return textures.size(); }
