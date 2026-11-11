@@ -14,8 +14,7 @@ typedef std::shared_ptr<SceneNode> SharedNode;
 
 TestProgram::TestProgram() : Renderer(),
 	frameConstants(1),
-	skeletonShader("SkinningVertex.glsl", "TexturedFragment.glsl"),
-	staticShader("staticVertex.glsl", "TexturedFragment.glsl")
+	shader("UniversalVertex.glsl", "TexturedFragment.glsl")
 {
 	GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", animatedScene);
 	GLTFLoader::Load("../GLTF/DamagedHelmet/DamagedHelmet.gltf", staticScene);
@@ -62,7 +61,9 @@ void TestProgram::DrawStaticScene() {
 	//Mesh material n relates to mesh n
 	GLTFMeshMaterials	material = staticScene.meshMaterials[0];
 
-	BindShader(staticShader);
+	BindShader(shader);
+
+	glUniform1i(glGetUniformLocation(shader.GetProgramID(), "isAnimated"), 0);
 
 	Matrix4 modelMatrix = Matrix::Translation(Vector3{ -1,1.5,0 })
 		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
@@ -71,7 +72,7 @@ void TestProgram::DrawStaticScene() {
 
 	SetUniform("modelMatrix", modelMatrix);
 
-	glUniform1i(glGetUniformLocation(staticShader.GetProgramID(), "diffuseTex"), 0);
+	glUniform1i(glGetUniformLocation(shader.GetProgramID(), "diffuseTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 	BindMesh(*mesh);
 	for (int i = 0; i < mesh->GetSubMeshCount(); ++i) {
@@ -113,7 +114,9 @@ void TestProgram::DrawAnimatedScene() {
 		}
 	}
 
-	BindShader(skeletonShader);
+	BindShader(shader);
+
+	glUniform1i(glGetUniformLocation(shader.GetProgramID(), "isAnimated"), 1);
 
 	Matrix4 modelMatrix = Matrix::Translation(Vector3{ 0,0,0 })
 		* Matrix::Rotation(90.0f, Vector3(0, 1, 0))
@@ -122,10 +125,10 @@ void TestProgram::DrawAnimatedScene() {
 
 	SetUniform("modelMatrix", modelMatrix);
 
-	int j = glGetUniformLocation(skeletonShader.GetProgramID(), "joints");
+	int j = glGetUniformLocation(shader.GetProgramID(), "joints");
 	glUniformMatrix4fv(j, skeleton.size(), false,(float*)skeleton.data());
 
-	glUniform1i(glGetUniformLocation(skeletonShader.GetProgramID(), "diffuseTex"), 0);
+	glUniform1i(glGetUniformLocation(shader.GetProgramID(), "diffuseTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
 
 	BindMesh(*mesh);

@@ -20,8 +20,7 @@ namespace Project {
 		void DrawStaticScene();
 		void DrawAnimatedScene();
 
-		OGLShader skeletonShader;
-		OGLShader staticShader;
+		OGLShader shader;
 
 		StructuredOGLBuffer< FrameConstants> frameConstants;
 
