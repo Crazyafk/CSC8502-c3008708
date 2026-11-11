@@ -3,13 +3,11 @@
 
 using namespace Project;
 
-SceneNode::SceneNode(std::string _name, std::shared_ptr<Scene> _scene) : GLTFNode() {
-	scene = _scene;
+SceneNode::SceneNode(std::string _name) : GLTFNode() {
 	name = _name;
 }
 
-SceneNode::SceneNode(const GLTFNode& base, std::shared_ptr<Scene> _scene) : GLTFNode() {
-	scene = _scene;
+SceneNode::SceneNode(const GLTFNode& base) : GLTFNode() {
 	name = base.name;
 	nodeID = base.nodeID;
 	meshID = base.meshID;
@@ -19,23 +17,26 @@ SceneNode::SceneNode(const GLTFNode& base, std::shared_ptr<Scene> _scene) : GLTF
 	children = base.children;
 }
 
-void SceneNode::AddChild(std::shared_ptr<SceneNode> child) {
+void SceneNode::AddChild(std::shared_ptr<SceneNode> child, SharedScene inScene) {
 	child->parent = nodeID;
-	child->parent_p = std::shared_ptr<SceneNode>(this);
+	child->parent_p = inScene->GetNode(nodeID);
 
 	children.push_back(child->nodeID);
 	children_v.push_back(child);
 }
 
-void SceneNode::FindParent() {
+void SceneNode::FindParent(SharedScene inScene) {
+	if (parent_p) return;
 	if (parent != -1) {
-		parent_p = scene->GetNode(parent);
+		parent_p = inScene->GetNode(parent);
 	}
 }
 
-void SceneNode::FindChildren() {
+void SceneNode::FindChildren(SharedScene inScene) {
+	if (children.empty()) return;
+	if (!children_v.empty()) return;
 	for (int32_t child : children) {
-		children_v.push_back(scene->GetNode(child));
+		children_v.push_back(inScene->GetNode(child));
 	}
 }
 
@@ -61,19 +62,19 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, SharedSc
 	int32_t firstMat = parentScene->GetMeshMaterialsCount();
 	int32_t firstMatLayer = parentScene->GetMaterialsCount();
 	int32_t firstMesh = parentScene->GetMeshesCount();
-	int32_t firstNode = parentScene->GetNodesCount();
+	int32_t firstNode = parentScene->GetNodesCount() + 1; //we never added the root node to the underlying GLTF node array
 	int32_t firstTex = parentScene->GetTexturesCount();
 
 	//Step 2
 	for (GLTFNode& node : _object.sceneNodes) {
 		node.nodeID += firstNode;
 		node.meshID += firstMesh;
-		node.parent += firstNode;
+		if (node.parent != -1) node.parent += firstNode;
 		for (int32_t child : node.children) {
 			child += firstNode;
 		}
 	}
-	for (auto const& pair : _object.skinningData) { //Assuming the key of skinning data is the node id? please leave more comments rich ;_;
+	for (auto const& pair : _object.skinningData) { //Assuming the key of skinning data is the node id?
 		parentScene->skinningData[pair.first + firstNode] = pair.second;
 	}
 	for (auto& mat : _object.meshMaterials) {
@@ -115,17 +116,17 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, SharedSc
 
 	//Step 4
 	for (const GLTFNode &node : _object.sceneNodes) {
-		std::shared_ptr<SceneNode> sNode = std::make_shared<SceneNode>(node, parentScene);
+		std::shared_ptr<SceneNode> sNode = std::make_shared<SceneNode>(node);
 		parentScene->allNodes.push_back(sNode);
 	}
 	for (auto &node : parentScene->allNodes) {
-		node->FindParent();
-		node->FindChildren();
+		node->FindParent(parentScene);
+		node->FindChildren(parentScene);
 	}
 
 	int32_t root_ID = _object.topLevelNodes[0];
 	SharedNode root = parentScene->GetNode(root_ID);
-	setParent->AddChild(root);
+	setParent->AddChild(root, parentScene);
 
 	return root;
 }

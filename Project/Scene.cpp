@@ -4,7 +4,7 @@
 using namespace Project;
 
 Scene::Scene() {
-	root = std::make_shared<SceneNode>(std::string("Scene Root"), SharedScene(this));
+	root = std::make_shared<SceneNode>(std::string("Scene Root"));
 	AddNode(root);
 }
 

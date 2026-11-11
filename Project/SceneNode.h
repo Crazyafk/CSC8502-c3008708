@@ -11,16 +11,16 @@ namespace Project {
 
 	class SceneNode : protected GLTFNode {
 	public:
-		SceneNode(std::string _name, std::shared_ptr<Scene> _scene);
-		SceneNode(const GLTFNode& base, std::shared_ptr<Scene> _scene);
+		SceneNode(std::string _name);
+		SceneNode(const GLTFNode& base);
 		~SceneNode() {};
 
 		static std::shared_ptr<SceneNode> FromGLTFScene(GLTFScene& _object, SharedScene parentScene, SharedNode setParent = nullptr);
 
-		void AddChild(std::shared_ptr<SceneNode> child);
+		void AddChild(std::shared_ptr<SceneNode> child, SharedScene inScene);
 
-		void FindParent();
-		void FindChildren();
+		void FindParent(SharedScene inScene);
+		void FindChildren(SharedScene inScene);
 
 		//bool HasMesh() { return meshID == -1; }
 
@@ -33,7 +33,5 @@ namespace Project {
 		//named to not shadow the vars parent and children in the base class
 		std::shared_ptr<SceneNode> parent_p = nullptr;
 		std::vector<std::shared_ptr<SceneNode>> children_v;
-
-		std::shared_ptr<Scene> scene = nullptr;
 	};
 }
