@@ -64,10 +64,10 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, std::sha
 
 	//Step 2
 	for (GLTFNode node : _object.sceneNodes) {
-		nodeID += firstNode;
-		meshID += firstMesh;
-		parent += firstNode;
-		for (int32_t child : children) {
+		node.nodeID += firstNode;
+		node.meshID += firstMesh;
+		node.parent += firstNode;
+		for (int32_t child : node.children) {
 			child += firstNode;
 		}
 	}
@@ -110,7 +110,7 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, std::sha
 
 	//Step 4
 	for (const GLTFNode &node : _object.sceneNodes) {
-		SceneNode sNode = new SceneNode(node, parentScene);
+		std::shared_ptr<SceneNode> sNode = std::make_shared<SceneNode>(node, parentScene);
 		parentScene->allNodes.push_back(sNode);
 	}
 	for (auto &node : parentScene->allNodes) {
