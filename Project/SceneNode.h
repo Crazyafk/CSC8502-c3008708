@@ -6,6 +6,7 @@ namespace Project {
 	class SceneNode;
 
 	using namespace NCL::Rendering;
+	using namespace NCL::Maths;
 	typedef std::shared_ptr<Scene> SharedScene;
 	typedef std::shared_ptr<SceneNode> SharedNode;
 
@@ -33,6 +34,10 @@ namespace Project {
 		SharedMeshAnim GetAnimation(SharedScene inScene);
 		Matrix4 GetLocalMatrix() { return localMatrix; }
 		Matrix4 GetWorldMatrix() { return worldMatrix; }
+
+		// Model Matrix: Transformation from local to world space.
+		void SetLocalMatrix(Matrix4 m) { localMatrix = m; }
+		void SetAnimation(int32_t anim_id) { animation_id = anim_id; }
 	protected:
 		//named to not shadow the vars parent and children in the base class
 		std::shared_ptr<SceneNode> parent_p = nullptr;

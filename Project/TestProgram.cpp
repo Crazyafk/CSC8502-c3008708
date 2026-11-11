@@ -21,8 +21,19 @@ TestProgram::TestProgram() : Renderer(),
 	GLTFLoader::Load("../GLTF/DamagedHelmet/DamagedHelmet.gltf", staticScene);
 
 	SharedScene scene = std::make_shared<Scene>();
+
 	SharedNode cesiumMan = SceneNode::FromGLTFScene(animatedScene, scene);
+	cesiumMan->SetLocalMatrix(Matrix::Translation(Vector3{ 0,0,0 })
+		* Matrix::Rotation(90.0f, Vector3(0, 1, 0))
+		* Matrix::Rotation(270.0f, Vector3(1, 0, 0))
+		* Matrix::Scale(Vector3{ 1,1,1 }));
+
 	SharedNode helmet = SceneNode::FromGLTFScene(staticScene, scene);
+	helmet->SetLocalMatrix(Matrix::Translation(Vector3{ -1, 1.5, 0 })
+		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
+		* Matrix::Rotation(90.0f, Vector3(1, 0, 0))
+		* Matrix::Scale(Vector3{ 0.5f,0.5f,0.5f }));
+	helmet->SetAnimation(0);
 
 	scene->UploadMeshes(this);
 
