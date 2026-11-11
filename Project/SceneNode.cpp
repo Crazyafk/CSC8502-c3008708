@@ -43,7 +43,7 @@ void SceneNode::FindChildren() {
 * Integrates a GLTF Scene into the given parent scene and returns pointer to the node at the root of the GLTF Scene.
 * Note: Makes the given GLTF Scene invalid.
 */
-std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, std::shared_ptr<Scene> parentScene) {
+std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, SharedScene parentScene, SharedNode setParent) {
 	/*
 	* Implementation Notes
 	* - Friended by Scene (needed to add vector data)
@@ -53,6 +53,8 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, std::sha
 	* 3. Add Vector Data
 	* 4. Add SceneNode Objects
 	*/
+
+	if (!setParent) setParent = parentScene->GetRoot();
 
 	//Step 1
 	int32_t firstAnim = parentScene->GetAnimationsCount();
@@ -122,5 +124,8 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, std::sha
 	}
 
 	int32_t root_ID = _object.topLevelNodes[0];
-	return parentScene->GetNode(root_ID);
+	SharedNode root = parentScene->GetNode(root_ID);
+	setParent->AddChild(root);
+
+	return root;
 }

@@ -4,11 +4,15 @@
 
 namespace Project {
 	using namespace NCL::Rendering;
+	typedef std::shared_ptr<Scene> SharedScene;
+	typedef std::shared_ptr<SceneNode> SharedNode;
 
 	class Scene : protected GLTFScene {
 	public:
-		Scene() = default;
-		std::shared_ptr<SceneNode> GetNode(int32_t id) { return allNodes[id]; }
+		Scene();
+		SharedNode GetNode(int32_t id) { return allNodes[id]; }
+		SharedNode GetRoot() { return root; }
+		void AddNode(SharedNode node);
 
 		size_t GetMeshesCount() { return meshes.size(); }
 		size_t GetAnimationsCount() { return animations.size(); }
@@ -17,8 +21,11 @@ namespace Project {
 		size_t GetMaterialsCount() { return materials.size(); }
 		size_t GetNodesCount() { return sceneNodes.size(); }
 
-		friend std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, std::shared_ptr<Scene> parentScene);
+		SharedMesh GetMesh(int32_t id) { return meshes[id]; }
+
+		friend SharedNode SceneNode::FromGLTFScene(GLTFScene& _object, SharedScene parentScene, SharedNode setParent);
 	protected:
-		std::vector<std::shared_ptr<SceneNode>> allNodes;
+		std::vector<SharedNode> allNodes;
+		SharedNode root;
 	};
 }
