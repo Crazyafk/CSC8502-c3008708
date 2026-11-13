@@ -1,0 +1,11 @@
+Model Information:
+* title:	Bugatti Circuit 2017 layout
+* source:	https://sketchfab.com/3d-models/bugatti-circuit-2017-layout-1d1c967a60ef44d4a7a77c6d75528d83
+* author:	Dave Love SketchFab (https://sketchfab.com/Tyler_Dave)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Bugatti Circuit 2017 layout" (https://sketchfab.com/3d-models/bugatti-circuit-2017-layout-1d1c967a60ef44d4a7a77c6d75528d83) by Dave Love SketchFab (https://sketchfab.com/Tyler_Dave) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
