@@ -36,6 +36,7 @@ namespace Project {
 
 		void SetUniform(const std::string& name, const Matrix4& mat);
 		void SetUniform(const std::string& name, const Vector2& mat);
+		void SetUniform(const std::string& name, int i);
 
 		void BindBufferAsUBO(const OGLBuffer& b, GLuint slotID);
 		void BindBufferAsSSBO(const OGLBuffer& b, GLuint slotID);
