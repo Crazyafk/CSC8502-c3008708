@@ -35,6 +35,8 @@ namespace Project {
 
 		// TODO: IS TRANSPARENT?? WE CAN DEAL WITH IT WHEN WE HAVE TRANSPARENT MESHES
 
+		std::vector<SharedNode> GetChildren() { return children_v; }
+
 		std::string GetName() { return name; }
 		uint32_t GetID() { return nodeID; }
 		SharedMesh GetMesh(SharedScene inScene);
@@ -45,10 +47,17 @@ namespace Project {
 		// Model Matrix: Transformation from local to world space.
 		void SetLocalMatrix(Matrix4 m) { localMatrix = m; }
 		void SetAnimation(int32_t anim_id) { animation_id = anim_id; }
+
+		float GetCameraDistance() const { return distanceFromCamera; }
+		void SetCameraDistance(float f) { distanceFromCamera = f; }
+		static bool CompareByCameraDistance(SharedNode a, SharedNode b) {
+			return(a->distanceFromCamera < b->distanceFromCamera);
+		}
 	protected:
 		//named to not shadow the vars parent and children in the base class
 		SharedNode parent_p = nullptr;
 		std::vector<SharedNode> children_v;
 		int32_t animation_id = -1;
+		float distanceFromCamera;
 	};
 }

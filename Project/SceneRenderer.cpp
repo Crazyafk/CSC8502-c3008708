@@ -1,6 +1,8 @@
 #include "SceneRenderer.h"
 #include "SceneNode.h"
 #include "Scene.h"
+#include "MatrixUtils.h"
+#include <algorithm>
 
 using namespace NCL;
 using namespace Rendering;
@@ -24,6 +26,13 @@ SceneRenderer::SceneRenderer() : Renderer(),
 void SceneRenderer::RenderFrame() {
 	UpdateUBO();
 	scene->Update(frameTime);
+
+	BuildNodeLists(scene->GetRoot());
+	SortNodeLists();
+	BindShader(shader);
+	DrawNodes();
+
+	ClearNodeLists();
 }
 
 void SceneRenderer::PopulateScene() {
@@ -57,4 +66,41 @@ void SceneRenderer::UpdateUBO() {
 	frameConstants.elements[0].totalTime = totalRunTime;
 
 	frameConstants.GPUSync();
+}
+
+void SceneRenderer::BuildNodeLists(SharedNode from) {
+	// TODO: frustum checks
+
+	Vector3 dir = GetMatrixPosition(from->GetWorldMatrix()) - 
+		defaultCamera->GetPosition();
+	from->SetCameraDistance(Vector::Dot(dir, dir));
+
+	opaqueNodeList.push_back(from);
+
+	for (SharedNode child : from->GetChildren()) {
+		BuildNodeLists(child);
+	}
+}
+
+void SceneRenderer::SortNodeLists() {
+	std::sort(opaqueNodeList.begin(),
+		opaqueNodeList.end(),
+		SceneNode::CompareByCameraDistance);
+}
+
+void SceneRenderer::ClearNodeLists() {
+	opaqueNodeList.clear();
+}
+
+void SceneRenderer::DrawNodes() {
+	for (SharedNode node : opaqueNodeList) {
+		DrawNode(node);
+	}
+	// TODO: transparent node support:
+	//		Edit other node list funcs too
+	//		use rbegin() and rend() in Sort
+}
+
+void SceneRenderer::DrawNode(SharedNode node) {
+
 }

@@ -16,9 +16,15 @@ namespace Project {
 	protected:
 		void PopulateScene();
 		void UpdateUBO();
+		void BuildNodeLists(SharedNode from);
+		void SortNodeLists();
+		void ClearNodeLists();
+		void DrawNodes();
+		void DrawNode(SharedNode node);
 
 		OGLShader shader;
 		SharedScene scene;
 		StructuredOGLBuffer<FrameConstants> frameConstants;
+		std::vector<SharedNode> opaqueNodeList;
 	};
 }
