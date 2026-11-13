@@ -26,6 +26,9 @@ namespace Project {
 		size_t GetNodesCount() { return sceneNodes.size(); }
 
 		SharedMesh GetMesh(int32_t id) { return meshes[id]; }
+		GLTFMaterial& GetMaterial(int32_t id) { return materials[id]; }
+		SharedTexture GetTexture(int32_t id) { return textures[id]; }
+		GLTFMeshMaterials GetMeshMaterials(int32_t id) { return meshMaterials[id]; }
 		SharedMeshAnim GetAnimation(int32_t id) { return animations[id]; }
 
 		friend SharedNode SceneNode::FromGLTFScene(GLTFScene& _object, SharedScene parentScene, SharedNode setParent);

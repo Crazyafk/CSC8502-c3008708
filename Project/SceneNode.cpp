@@ -29,10 +29,6 @@ void SceneNode::Update(float frameTime) {
 	}
 }
 
-void SceneNode::Draw(const OGLRenderer& renderer) {
-
-}
-
 void SceneNode::AddChild(std::shared_ptr<SceneNode> child, SharedScene inScene) {
 	child->parent = nodeID;
 	child->parent_p = inScene->GetNode(nodeID);
@@ -56,7 +52,21 @@ void SceneNode::FindChildren(SharedScene inScene) {
 	}
 }
 
+bool SceneNode::FindMeshNode(SharedNode& out) {
+	if (HasMesh()) return true;
+
+	for (SharedNode child : children_v) {
+		if (child->FindMeshNode(out)) {
+			out = out ? out : child;
+			return true;
+		}
+	}
+	out = nullptr;
+	return false;
+}
+
 SharedMesh SceneNode::GetMesh(SharedScene inScene) { return HasMesh() ? nullptr : inScene->GetMesh(meshID); }
+GLTFMeshMaterials SceneNode::GetMeshMaterials(SharedScene inScene) { return inScene->GetMeshMaterials(meshID); }
 SharedMeshAnim SceneNode::GetAnimation(SharedScene inScene) { return isAnimated() ? nullptr : inScene->GetAnimation(animation_id); }
 
 /*

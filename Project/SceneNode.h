@@ -21,7 +21,6 @@ namespace Project {
 		~SceneNode() {};
 
 		void Update(float frameTime);
-		void Draw(const OGLRenderer& renderer);
 
 		static std::shared_ptr<SceneNode> FromGLTFScene(GLTFScene& _object, SharedScene parentScene, SharedNode setParent = nullptr);
 
@@ -40,9 +39,13 @@ namespace Project {
 		std::string GetName() { return name; }
 		uint32_t GetID() { return nodeID; }
 		SharedMesh GetMesh(SharedScene inScene);
+		GLTFMeshMaterials GetMeshMaterials(SharedScene inScene);
 		SharedMeshAnim GetAnimation(SharedScene inScene);
 		Matrix4 GetLocalMatrix() { return localMatrix; }
 		Matrix4 GetWorldMatrix() { return worldMatrix; }
+
+		// Finds the first node with a mesh from itself or descendants, depth-first
+		bool FindMeshNode(SharedNode& out);
 
 		// Model Matrix: Transformation from local to world space.
 		void SetLocalMatrix(Matrix4 m) { localMatrix = m; }
