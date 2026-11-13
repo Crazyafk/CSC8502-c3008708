@@ -3,7 +3,7 @@ Adapted from CSC8502/main
 *//////////////////////////////////////////////////////////////////////////////
 #include "../NCLCoreClasses/Window.h"
 #include "../NCLCoreClasses/GameTimer.h"
-#include "TestProgram.h"
+#include "SceneRenderer.h"
 
 using namespace NCL;
 using namespace Rendering;
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
 
 	w->LockMouseToWindow(lockCursor);
 
-	std::unique_ptr<TestProgram> renderer = std::make_unique<TestProgram>();
+	std::unique_ptr<SceneRenderer> renderer = std::make_unique<SceneRenderer>();
 
 	if (!renderer->HasInitialised()) {
 		return -1;
