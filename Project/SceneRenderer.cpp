@@ -43,6 +43,9 @@ void SceneRenderer::PopulateScene() {
 		* Matrix::Rotation(90.0f, Vector3(0, 1, 0))
 		* Matrix::Rotation(270.0f, Vector3(1, 0, 0))
 		* Matrix::Scale(Vector3{ 1,1,1 }));
+	SharedNode cesiumManMesh;
+	cesiumMan->FindMeshNode(cesiumManMesh);
+	cesiumManMesh->SetAnimation(0);
 
 	GLTFScene tempSceneB;
 	GLTFLoader::Load("../GLTF/DamagedHelmet/DamagedHelmet.gltf", tempSceneB);
@@ -51,7 +54,6 @@ void SceneRenderer::PopulateScene() {
 		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
 		* Matrix::Rotation(90.0f, Vector3(1, 0, 0))
 		* Matrix::Scale(Vector3{ 0.5f,0.5f,0.5f }));
-	helmet->SetAnimation(0);
 
 	scene->UploadMeshes(this);
 }
@@ -71,11 +73,13 @@ void SceneRenderer::UpdateUBO() {
 void SceneRenderer::BuildNodeLists(SharedNode from) {
 	// TODO: frustum checks
 
-	Vector3 dir = GetMatrixPosition(from->GetWorldMatrix()) - 
-		defaultCamera->GetPosition();
-	from->SetCameraDistance(Vector::Dot(dir, dir));
+	if (from->HasMesh()) {
+		Vector3 dir = GetMatrixPosition(from->GetWorldMatrix()) -
+			defaultCamera->GetPosition();
+		from->SetCameraDistance(Vector::Dot(dir, dir));
 
-	opaqueNodeList.push_back(from);
+		opaqueNodeList.push_back(from);
+	}
 
 	for (SharedNode child : from->GetChildren()) {
 		BuildNodeLists(child);
@@ -102,5 +106,24 @@ void SceneRenderer::DrawNodes() {
 }
 
 void SceneRenderer::DrawNode(SharedNode node) {
+	SetUniform("isAnimated", node->isAnimated() ? 1 : 0);
+	if (node->isAnimated()) return;
+	
+	SharedMesh mesh = (SharedMesh)node->GetMesh(scene);
+	GLTFMeshMaterials	material = node->GetMeshMaterials(scene);
+	
+	SetUniform("modelMatrix", node->GetWorldMatrix());
+	
+	glUniform1i(glGetUniformLocation(shader.GetProgramID(), "diffuseTex"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	BindMesh(*static_cast<OGLMesh*>(mesh.get()));
+	
+	for (int i = 0; i < mesh->GetSubMeshCount(); ++i) {
+		//Material layer n relates to submesh n
+		GLTFMaterial& layer = scene->GetMaterial(material.layers[i]);
+		SharedTexture albedoTex = (SharedTexture)scene->GetTexture(layer.albedo);
 
+		glBindTexture(GL_TEXTURE_2D, albedoTex->GetAssetID());
+		DrawBoundMesh(i);
+	}
 }
