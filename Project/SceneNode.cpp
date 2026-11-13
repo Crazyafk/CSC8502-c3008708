@@ -65,9 +65,9 @@ bool SceneNode::FindMeshNode(SharedNode& out) {
 	return false;
 }
 
-SharedMesh SceneNode::GetMesh(SharedScene inScene) { return HasMesh() ? nullptr : inScene->GetMesh(meshID); }
+SharedMesh SceneNode::GetMesh(SharedScene inScene) { return HasMesh() ? inScene->GetMesh(meshID) : nullptr; }
 GLTFMeshMaterials SceneNode::GetMeshMaterials(SharedScene inScene) { return inScene->GetMeshMaterials(meshID); }
-SharedMeshAnim SceneNode::GetAnimation(SharedScene inScene) { return isAnimated() ? nullptr : inScene->GetAnimation(animation_id); }
+SharedMeshAnim SceneNode::GetAnimation(SharedScene inScene) { return isAnimated() ? inScene->GetAnimation(animation_id) : nullptr; }
 
 /*
 * Integrates a GLTF Scene into the given parent scene and returns pointer to the node at the root of the GLTF Scene.
