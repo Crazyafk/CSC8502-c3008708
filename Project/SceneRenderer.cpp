@@ -114,16 +114,16 @@ void SceneRenderer::DrawNode(SharedNode node) {
 	
 	SetUniform("modelMatrix", node->GetWorldMatrix());
 	
-	glUniform1i(glGetUniformLocation(shader.GetProgramID(), "diffuseTex"), 0);
+	SetUniform("diffuseTex", 0);
 	glActiveTexture(GL_TEXTURE0);
 	BindMesh(*static_cast<OGLMesh*>(mesh.get()));
 	
 	for (int i = 0; i < mesh->GetSubMeshCount(); ++i) {
 		//Material layer n relates to submesh n
 		GLTFMaterial& layer = scene->GetMaterial(material.layers[i]);
-		SharedTexture albedoTex = (SharedTexture)scene->GetTexture(layer.albedo);
+		SharedOGLTexture albedoTex = static_pointer_cast<OGLTexture>(scene->GetTexture(layer.albedo));
 
-		glBindTexture(GL_TEXTURE_2D, albedoTex->GetAssetID());
+		glBindTexture(GL_TEXTURE_2D, albedoTex->GetObjectID());
 		DrawBoundMesh(i);
 	}
 }
