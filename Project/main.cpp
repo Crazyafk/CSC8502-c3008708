@@ -9,7 +9,7 @@ using namespace NCL;
 using namespace Rendering;
 using namespace Project;
 
-static const float defaultCamSpeed = 10;
+static const float defaultCamSpeed = 20;
 
 int main(int argc, char* argv[]) {
 	NCL::WindowInitialisation winInit = {
@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 		.windowTitle = "Welcome to OpenGL!",
 	};
 
-	bool lockCursor = false;
+	bool lockCursor = true;
 
 	for (int i = 0; i < argc; ++i) {
 		std::string argument(argv[i]);
