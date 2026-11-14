@@ -33,6 +33,7 @@ namespace Project {
 
 		bool HasMesh() { return meshID != -1; }
 		bool isAnimated() { return animation_id != -1; }
+		bool isTransparent() { return is_transparent; };
 
 		// TODO: IS TRANSPARENT?? WE CAN DEAL WITH IT WHEN WE HAVE TRANSPARENT MESHES
 
@@ -69,5 +70,8 @@ namespace Project {
 		int32_t animation_id = -1;
 		float distanceFromCamera;
 		SharedSkeletalAnimator animator = nullptr;
+		bool is_transparent = false;
+
+		void FindIsTransparent(SharedScene inScene);
 	};
 }

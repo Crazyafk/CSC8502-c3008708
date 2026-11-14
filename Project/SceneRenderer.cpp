@@ -86,7 +86,12 @@ void SceneRenderer::BuildNodeLists(SharedNode from) {
 			defaultCamera->GetPosition();
 		from->SetCameraDistance(Vector::Dot(dir, dir));
 
-		opaqueNodeList.push_back(from);
+		if (from->isTransparent()) {
+			transparentNodeList.push_back(from);
+		}
+		else {
+			opaqueNodeList.push_back(from);
+		}
 	}
 
 	for (SharedNode child : from->GetChildren()) {
@@ -98,19 +103,23 @@ void SceneRenderer::SortNodeLists() {
 	std::sort(opaqueNodeList.begin(),
 		opaqueNodeList.end(),
 		SceneNode::CompareByCameraDistance);
+	std::sort(transparentNodeList.rbegin(),
+		transparentNodeList.rend(),
+		SceneNode::CompareByCameraDistance);
 }
 
 void SceneRenderer::ClearNodeLists() {
 	opaqueNodeList.clear();
+	transparentNodeList.clear();
 }
 
 void SceneRenderer::DrawNodes() {
 	for (SharedNode node : opaqueNodeList) {
 		DrawNode(node);
 	}
-	// TODO: transparent node support:
-	//		Edit other node list funcs too
-	//		use rbegin() and rend() in Sort
+	for (SharedNode node : transparentNodeList) {
+		DrawNode(node);
+	}
 }
 
 void SceneRenderer::DrawNode(SharedNode node) {

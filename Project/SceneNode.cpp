@@ -158,6 +158,7 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, SharedSc
 	for (auto &node : parentScene->allNodes) {
 		node->FindParent(parentScene);
 		node->FindChildren(parentScene);
+		node->FindIsTransparent(parentScene);
 	}
 
 	int32_t root_ID = _object.topLevelNodes[0];
@@ -165,4 +166,17 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, SharedSc
 	setParent->AddChild(root, parentScene);
 
 	return root;
+}
+
+void SceneNode::FindIsTransparent(SharedScene inScene) {
+	if (!HasMesh()) return;
+	std::vector<int32_t> layers = inScene->GetMeshMaterials(meshID).layers;
+	for (int32_t layer_id : layers) {
+		GLTFMaterial layer = inScene->GetMaterial(layer_id);
+		if (layer.alphaMode != GLTFAlphaMode::Opaque) {
+			is_transparent = true;
+			return;
+		}
+	}
+	is_transparent = false;
 }

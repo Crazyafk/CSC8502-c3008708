@@ -27,5 +27,6 @@ namespace Project {
 		SharedScene scene;
 		StructuredOGLBuffer<FrameConstants> frameConstants;
 		std::vector<SharedNode> opaqueNodeList;
+		std::vector<SharedNode> transparentNodeList;
 	};
 }
