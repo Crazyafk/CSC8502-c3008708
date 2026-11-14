@@ -59,6 +59,8 @@ void SceneRenderer::PopulateScene() {
 	GLTFLoader::Load("../GLTF/BugattiTrack/scene.gltf", tempSceneC);
 	SharedNode world = SceneNode::FromGLTFScene(tempSceneC, scene);
 	world->SetLocalMatrix(Matrix::Translation(Vector3{ 0, -10, 0 })
+		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
+		* Matrix::Rotation(270.0f, Vector3(1, 0, 0))
 		* Matrix::Scale(Vector3{ 1,1,1 }));
 
 	scene->UploadMeshes(this);
