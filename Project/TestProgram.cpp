@@ -32,7 +32,7 @@ TestProgram::TestProgram() : Renderer(),
 		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
 		* Matrix::Rotation(90.0f, Vector3(1, 0, 0))
 		* Matrix::Scale(Vector3{ 0.5f,0.5f,0.5f }));
-	helmet->SetAnimation(0);
+	helmet->SetAnimation(0, scene);
 
 	scene->UploadMeshes(this);
 

@@ -45,7 +45,7 @@ void SceneRenderer::PopulateScene() {
 		* Matrix::Scale(Vector3{ 1,1,1 }));
 	SharedNode cesiumManMesh;
 	cesiumMan->FindMeshNode(cesiumManMesh);
-	cesiumManMesh->SetAnimation(0);
+	cesiumManMesh->SetAnimation(0, scene);
 
 	GLTFScene tempSceneB;
 	GLTFLoader::Load("../GLTF/DamagedHelmet/DamagedHelmet.gltf", tempSceneB);
@@ -107,7 +107,7 @@ void SceneRenderer::DrawNodes() {
 
 void SceneRenderer::DrawNode(SharedNode node) {
 	SetUniform("isAnimated", node->isAnimated() ? 1 : 0);
-	if (node->isAnimated()) return;
+	if (node->isAnimated()) AnimateNode(node);
 	
 	SharedMesh mesh = (SharedMesh)node->GetMesh(scene);
 	GLTFMeshMaterials	material = node->GetMeshMaterials(scene);
@@ -126,4 +126,10 @@ void SceneRenderer::DrawNode(SharedNode node) {
 		glBindTexture(GL_TEXTURE_2D, albedoTex->GetObjectID());
 		DrawBoundMesh(i);
 	}
+}
+
+void SceneRenderer::AnimateNode(SharedNode node) {
+	SharedSkeletalAnimator animator = node->GetAnimator();
+	animator->Update(frameTime);
+	SetUniform("joints", *(animator->skeleton.data()));
 }

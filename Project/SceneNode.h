@@ -1,5 +1,6 @@
 #pragma once
 #include "..\GLTFLoader\GLTFLoader.h"
+#include "SkeletalAnimator.h"
 
 namespace NCL::Rendering {
 	class OGLRenderer;
@@ -11,6 +12,7 @@ namespace Project {
 
 	using namespace NCL::Rendering;
 	using namespace NCL::Maths;
+
 	typedef std::shared_ptr<Scene> SharedScene;
 	typedef std::shared_ptr<SceneNode> SharedNode;
 
@@ -43,13 +45,17 @@ namespace Project {
 		SharedMeshAnim GetAnimation(SharedScene inScene);
 		Matrix4 GetLocalMatrix() { return localMatrix; }
 		Matrix4 GetWorldMatrix() { return worldMatrix; }
+		SharedSkeletalAnimator GetAnimator() { return animator; }
 
 		// Finds the first node with a mesh from itself or descendants, depth-first
 		bool FindMeshNode(SharedNode& out);
 
 		// Model Matrix: Transformation from local to world space.
 		void SetLocalMatrix(Matrix4 m) { localMatrix = m; }
-		void SetAnimation(int32_t anim_id) { animation_id = anim_id; }
+		void SetAnimation(int32_t anim_id, SharedScene inScene) { 
+			animation_id = anim_id; 
+			animator = std::make_shared<SkeletalAnimator>(GetMesh(inScene), GetAnimation(inScene));
+		}
 
 		float GetCameraDistance() const { return distanceFromCamera; }
 		void SetCameraDistance(float f) { distanceFromCamera = f; }
@@ -62,5 +68,6 @@ namespace Project {
 		std::vector<SharedNode> children_v;
 		int32_t animation_id = -1;
 		float distanceFromCamera;
+		SharedSkeletalAnimator animator = nullptr;
 	};
 }

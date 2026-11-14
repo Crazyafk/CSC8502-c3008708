@@ -21,6 +21,7 @@ namespace Project {
 		void ClearNodeLists();
 		void DrawNodes();
 		void DrawNode(SharedNode node);
+		void AnimateNode(SharedNode node);
 
 		OGLShader shader;
 		SharedScene scene;
