@@ -4,6 +4,7 @@ Adapted from CSC8502/main
 #include "../NCLCoreClasses/Window.h"
 #include "../NCLCoreClasses/GameTimer.h"
 #include "SceneRenderer.h"
+#include <iostream>
 
 using namespace NCL;
 using namespace Rendering;
@@ -81,6 +82,10 @@ int main(int argc, char* argv[]) {
 		}
 		renderer->Update(time);
 		renderer->Render();
+
+		if (Window::GetKeyboard()->KeyPressed(KeyCodes::F1)) {
+			std::cout << renderer->GetDefaultCamera().GetPosition();
+		}
 	}
 
 	Window::DestroyGameWindow();
