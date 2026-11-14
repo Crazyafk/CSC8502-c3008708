@@ -107,12 +107,19 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, SharedSc
 		parentScene->skinningData[pair.first + firstNode] = pair.second;
 	}
 	for (auto& mat : _object.meshMaterials) {
-		for (auto layer : mat.layers) {
+		for (auto& layer : mat.layers) {
 			layer += firstMatLayer;
 		}
 	}
 	for (auto& node : _object.topLevelNodes) {
 		node += firstNode;
+	}
+	for (auto& layer : _object.materials) {
+		if (layer.albedo != -1) layer.albedo += firstTex;
+		if (layer.bump != -1) layer.bump += firstTex;
+		if (layer.occlusion != -1) layer.occlusion += firstTex;
+		if (layer.emission != -1) layer.emission += firstTex;
+		if (layer.metallic != -1) layer.metallic += firstTex;
 	}
 	//Does anything else need to be offset? MAYBE
 
