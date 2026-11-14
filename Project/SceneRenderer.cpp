@@ -13,7 +13,7 @@ typedef std::shared_ptr<SceneNode> SharedNode;
 
 SceneRenderer::SceneRenderer() : Renderer(),
 	frameConstants(1),
-	shader("UniversalVertex.glsl", "TexturedFragment.glsl")
+	shader("UniversalVertex.glsl", "UniversalFragment.glsl")
 {
 	scene = std::make_shared<Scene>();
 	PopulateScene();
@@ -54,6 +54,12 @@ void SceneRenderer::PopulateScene() {
 		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
 		* Matrix::Rotation(90.0f, Vector3(1, 0, 0))
 		* Matrix::Scale(Vector3{ 0.5f,0.5f,0.5f }));
+
+	GLTFScene tempSceneC;
+	GLTFLoader::Load("../GLTF/BugattiTrack/scene.gltf", tempSceneC);
+	SharedNode world = SceneNode::FromGLTFScene(tempSceneC, scene);
+	world->SetLocalMatrix(Matrix::Translation(Vector3{ 0, -10, 0 })
+		* Matrix::Scale(Vector3{ 1,1,1 }));
 
 	scene->UploadMeshes(this);
 }
@@ -121,9 +127,18 @@ void SceneRenderer::DrawNode(SharedNode node) {
 	for (int i = 0; i < mesh->GetSubMeshCount(); ++i) {
 		//Material layer n relates to submesh n
 		GLTFMaterial& layer = scene->GetMaterial(material.layers[i]);
-		SharedOGLTexture albedoTex = static_pointer_cast<OGLTexture>(scene->GetTexture(layer.albedo));
 
-		glBindTexture(GL_TEXTURE_2D, albedoTex->GetObjectID());
+		bool hasTexture = layer.albedo != -1;
+		SetUniform("hasTexture", hasTexture ? 1 : 0);
+
+		if (hasTexture) {
+			SharedOGLTexture albedoTex = static_pointer_cast<OGLTexture>(scene->GetTexture(layer.albedo));
+			glBindTexture(GL_TEXTURE_2D, albedoTex->GetObjectID());
+		}
+		else {
+			SetUniform("albedoColour", layer.albedoColour);
+		}
+		
 		DrawBoundMesh(i);
 	}
 }

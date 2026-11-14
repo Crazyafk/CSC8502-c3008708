@@ -216,6 +216,16 @@ void Renderer::SetUniform(const std::string& name, const Matrix4& mat, int array
 	glUniformMatrix4fv(location, arrayLength, false, (float*)&mat);
 }
 
+void Renderer::SetUniform(const std::string& name, const Vector4& v) {
+	assert(m_boundShader);
+	GLuint id = m_boundShader->GetProgramID();
+	GLint  location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) {
+		return;
+	}
+	glUniform4f(location, v.x, v.y, v.z, v.w);
+}
+
 void Renderer::SetUniform(const std::string& name, const Vector2& v) {
 	assert(m_boundShader);
 	GLuint id = m_boundShader->GetProgramID();
