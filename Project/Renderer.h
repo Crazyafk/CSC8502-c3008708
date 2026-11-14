@@ -29,6 +29,7 @@ namespace Project {
 	protected:
 		UniqueOGLMesh CreateTriangle();
 		UniqueOGLMesh CreateQuad();
+		UniqueOGLMesh CreateSkyboxCube();
 
 		GLuint	CreateTexture(uint32_t width, uint32_t height, GLint internalformat, bool allocMips = false);
 
