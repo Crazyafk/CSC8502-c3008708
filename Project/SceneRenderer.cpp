@@ -131,5 +131,5 @@ void SceneRenderer::DrawNode(SharedNode node) {
 void SceneRenderer::AnimateNode(SharedNode node) {
 	SharedSkeletalAnimator animator = node->GetAnimator();
 	animator->Update(frameTime);
-	SetUniform("joints", *(animator->skeleton.data()));
+	SetUniform("joints", *(animator->skeleton.data()), animator->skeleton.size());
 }

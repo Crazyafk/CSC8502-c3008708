@@ -206,14 +206,14 @@ GLuint	Renderer::CreateTexture(uint32_t width, uint32_t height, GLint internalFo
 	return tex;
 }
 
-void Renderer::SetUniform(const std::string& name, const Matrix4& mat) {
+void Renderer::SetUniform(const std::string& name, const Matrix4& mat, int arrayLength) {
 	assert(m_boundShader);
 	GLuint id = m_boundShader->GetProgramID();
 	GLint  location = glGetUniformLocation(id, name.c_str());
 	if (location == -1) {
 		return;
 	}
-	glUniformMatrix4fv(location, 1, false, (float*)&mat);
+	glUniformMatrix4fv(location, arrayLength, false, (float*)&mat);
 }
 
 void Renderer::SetUniform(const std::string& name, const Vector2& v) {
