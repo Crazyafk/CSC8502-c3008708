@@ -27,6 +27,7 @@ namespace Project {
 
 		Camera& GetDefaultCamera() { return *defaultCamera; }
 	protected:
+		virtual void BehaviourUpdate() {};
 		UniqueOGLMesh CreateTriangle();
 		UniqueOGLMesh CreateQuad();
 		UniqueOGLMesh CreateSkyboxCube();

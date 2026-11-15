@@ -9,5 +9,6 @@ namespace Project {
 		~ProjectRenderer() = default;
 	protected:
 		void PopulateScene() override;
+		void BehaviourUpdate() override;
 	};
 }

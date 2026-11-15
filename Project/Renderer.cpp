@@ -54,6 +54,7 @@ void Renderer::Update(float dt) {
 	defaultCamera->UpdateCamera(dt);
 	frameTime = dt;
 	totalRunTime += dt;
+	BehaviourUpdate();
 }
 
 UniqueOGLMesh Renderer::CreateTriangle() {

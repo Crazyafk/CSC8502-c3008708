@@ -35,4 +35,8 @@ namespace Project {
 
 		scene->UploadMeshes(this);
 	}
+
+	void ProjectRenderer::BehaviourUpdate() {
+
+	}
 }
