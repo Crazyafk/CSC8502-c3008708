@@ -59,7 +59,11 @@ namespace Project {
 		}
 
 		float GetCameraDistance() const { return distanceFromCamera; }
-		void SetCameraDistance(float f) { distanceFromCamera = f; }
+		void SetCameraDistance(float f) { 
+			if (distanceFromCameraOverriden) return;
+			distanceFromCamera = f; 
+		}
+		void OverrideCameraDistance(float f) { distanceFromCamera = f; distanceFromCameraOverriden = true; }
 		static bool CompareByCameraDistance(SharedNode a, SharedNode b) {
 			return(a->distanceFromCamera < b->distanceFromCamera);
 		}
@@ -69,6 +73,7 @@ namespace Project {
 		std::vector<SharedNode> children_v;
 		int32_t animation_id = -1;
 		float distanceFromCamera;
+		bool distanceFromCameraOverriden = false;
 		SharedSkeletalAnimator animator = nullptr;
 		bool is_transparent = false;
 
