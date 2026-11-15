@@ -4,6 +4,17 @@
 namespace Project {
 	ProjectRenderer::ProjectRenderer() : SceneRenderer() {}
 
+	std::vector<std::string> ProjectRenderer::GetSkyboxTexturePaths() {
+		return {
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0002.png",
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0005.png",
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0003.png",
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0006.png",
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0001.png",
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0004.png"
+		};
+	}
+
 	void ProjectRenderer::PopulateScene() {
 		GLTFScene tempSceneA;
 		GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", tempSceneA);

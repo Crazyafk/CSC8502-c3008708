@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "../MatrixUtils.h"
 #include "SceneUtils.h"
+#include "../../OpenGLRendering/OGLTexture.h"
 #include <algorithm>
 
 using namespace NCL;
@@ -25,6 +26,7 @@ SceneRenderer::SceneRenderer() : Renderer(),
 
 void SceneRenderer::RenderFrame() {
 	UpdateUBO();
+	RenderSkybox();
 	scene->Update(frameTime);
 
 	BuildNodeLists(scene->GetRoot());
@@ -36,8 +38,35 @@ void SceneRenderer::RenderFrame() {
 }
 
 void SceneRenderer::BeforeFirstFrame() {
+	BuildSkybox();
 	std::cout << "Populating Scene!";
 	PopulateScene();
+}
+
+void SceneRenderer::BuildSkybox() {
+	std::vector<std::string> paths = GetSkyboxTexturePaths();
+	if (paths.empty()) return;
+
+	skybox.mesh = CreateSkyboxCube();
+	skybox.tex = OGLTexture::LoadCubemap(
+		paths[0], paths[1], paths[2], paths[3], paths[4], paths[5]
+	);
+}
+
+void SceneRenderer::RenderSkybox() {
+	if (!skybox.initialised) return;
+	BindShader(skybox.shader);
+	glDepthMask(GL_FALSE);
+
+	SetUniform("viewNoTranslation", NoTranslation(frameConstants.elements[0].viewMatrix));
+
+	BindMesh(*static_cast<OGLMesh*>(skybox.mesh.get()));
+	SetUniform("skybox", 1);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.tex->GetObjectID());
+	DrawBoundMesh();
+
+	glDepthMask(GL_TRUE);
 }
 
 void SceneRenderer::UpdateUBO() {
