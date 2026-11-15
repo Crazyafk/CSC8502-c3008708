@@ -24,6 +24,7 @@ namespace Project {
 		size_t GetMeshMaterialsCount() { return meshMaterials.size(); }
 		size_t GetMaterialsCount() { return materials.size(); }
 		size_t GetNodesCount() { return sceneNodes.size(); }
+		SharedNode GetNode(const std::string& name);
 
 		SharedMesh GetMesh(int32_t id) { return meshes[id]; }
 		GLTFMaterial& GetMaterial(int32_t id) { return materials[id]; }

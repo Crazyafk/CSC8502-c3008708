@@ -20,3 +20,9 @@ void Scene::UploadMeshes(RendererBase* renderer) {
 		m->UploadToGPU(renderer);
 	}
 }
+
+SharedNode Scene::GetNode(const std::string& name) {
+	for (SharedNode node : allNodes) {
+		if (node->GetName() == name) return node;
+	}
+}
