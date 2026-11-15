@@ -123,6 +123,8 @@ void SceneRenderer::DrawNodes() {
 }
 
 void SceneRenderer::DrawNode(SharedNode node) {
+	SetUniform("debug_nodeID", node->GetID());
+
 	SetUniform("isAnimated", node->isAnimated() ? 1 : 0);
 	if (node->isAnimated()) AnimateNode(node);
 	
