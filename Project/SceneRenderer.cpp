@@ -2,6 +2,7 @@
 #include "SceneNode.h"
 #include "Scene.h"
 #include "MatrixUtils.h"
+#include "SceneUtils.h"
 #include <algorithm>
 
 using namespace NCL;
@@ -57,6 +58,7 @@ void SceneRenderer::PopulateScene() {
 
 	GLTFScene tempSceneC;
 	GLTFLoader::Load("../GLTF/BugattiTrack/scene.gltf", tempSceneC);
+	CentreNodes(tempSceneC);
 	SharedNode world = SceneNode::FromGLTFScene(tempSceneC, scene);
 	world->SetLocalMatrix(Matrix::Translation(Vector3{ 0, -10, 0 })
 		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))

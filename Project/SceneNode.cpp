@@ -97,7 +97,7 @@ std::shared_ptr<SceneNode> SceneNode::FromGLTFScene(GLTFScene& _object, SharedSc
 	//Step 2
 	for (GLTFNode& node : _object.sceneNodes) {
 		node.nodeID += firstNode;
-		node.meshID += firstMesh;
+		if (node.meshID != -1) node.meshID += firstMesh;
 		if (node.parent != -1) node.parent += firstNode;
 		for (int32_t& child : node.children) {
 			child += firstNode;
