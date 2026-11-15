@@ -119,9 +119,11 @@ void SceneRenderer::DrawNodes() {
 	for (SharedNode node : opaqueNodeList) {
 		DrawNode(node);
 	}
+	glDepthMask(GL_FALSE);
 	for (SharedNode node : transparentNodeList) {
 		DrawNode(node);
 	}
+	glDepthMask(GL_TRUE);
 }
 
 void SceneRenderer::DrawNode(SharedNode node) {
