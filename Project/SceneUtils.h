@@ -4,5 +4,5 @@
 using namespace NCL::Rendering;
 
 namespace Project {
-	void CentreNodes(GLTFScene _object);
+	void CentreNodes(GLTFScene& _object);
 }

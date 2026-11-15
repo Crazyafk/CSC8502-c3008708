@@ -1,7 +1,7 @@
 #include "SceneUtils.h"
 
 namespace Project {
-	void CentreNodes(GLTFScene _object) {
+	void CentreNodes(GLTFScene& _object) {
 		std::unordered_map<int, Vector3> meshAverages;
 		for (int i = 0; i < _object.meshes.size(); ++i) {
 			meshAverages[i] = _object.meshes[i]->Centre();

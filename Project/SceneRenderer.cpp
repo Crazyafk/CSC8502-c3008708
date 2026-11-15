@@ -125,7 +125,8 @@ void SceneRenderer::DrawNodes() {
 }
 
 void SceneRenderer::DrawNode(SharedNode node) {
-	SetUniform("debug_nodeID", node->GetID());
+	SetUniform("debug_nodeID", (int)node->GetID());
+	SetUniform("debug_distanceFromCamera", node->GetCameraDistance());
 
 	SetUniform("isAnimated", node->isAnimated() ? 1 : 0);
 	if (node->isAnimated()) AnimateNode(node);

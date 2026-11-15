@@ -5,6 +5,7 @@
 uniform mat4 modelMatrix;
 uniform bool isAnimated;
 uniform int debug_nodeID;
+uniform float debug_distanceFromCamera;
 
 layout (std140, binding = 0) uniform Constants {
     FrameConstants frameConstants;
@@ -20,7 +21,8 @@ void main(void) {
     mat4 mvp = frameConstants.viewProjMatrix * modelMatrix;
     vec4 localPos   = vec4(position, 1.0f);
     vec4 pos = vec4(0, 0, 0, 0);
-    if(debug_nodeID == 1000){ localPos = vec4(0,0,0,0); }
+    if(debug_nodeID == -1){ localPos = vec4(0,0,0,0); }
+    if(debug_distanceFromCamera == -10000){ localPos = vec4(0,0,0,0); }
     if(isAnimated) {
         for (int i = 0; i < 4; ++i) {
             int     jointIndex  = jointIndices[i];

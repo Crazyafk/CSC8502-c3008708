@@ -278,6 +278,16 @@ void Renderer::SetUniform(const std::string& name, int i) {
 	glUniform1i(location, i);
 }
 
+void Renderer::SetUniform(const std::string& name, float f) {
+	assert(m_boundShader);
+	GLuint id = m_boundShader->GetProgramID();
+	GLint  location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) {
+		return;
+	}
+	glUniform1f(location, f);
+}
+
 void Renderer::SetCameraUniforms(const Camera& c, GLuint location) {
 	float aspect = Window::GetWindow()->GetScreenAspect();
 	Matrix4 viewMatrix = c.BuildViewMatrix();
