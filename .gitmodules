@@ -1,6 +1,6 @@
 [submodule "NCLCoreClasses"]
 	path = NCLCoreClasses
-	url = https://github.com/RichDavisonNCL/NCLCoreClasses.git
+	url = https://github.com/Crazyafk/NCLCoreClasses
 [submodule "OpenGLRendering"]
 	path = OpenGLRendering
 	url = https://github.com/RichDavisonNCL/OpenGLRendering
