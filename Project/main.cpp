@@ -3,7 +3,7 @@ Adapted from CSC8502/main
 *//////////////////////////////////////////////////////////////////////////////
 #include "../NCLCoreClasses/Window.h"
 #include "../NCLCoreClasses/GameTimer.h"
-#include "SceneRenderer.h"
+#include "SceneManagement/SceneRenderer.h"
 #include <iostream>
 
 using namespace NCL;

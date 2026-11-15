@@ -1,7 +1,7 @@
 #include "SceneRenderer.h"
 #include "SceneNode.h"
 #include "Scene.h"
-#include "MatrixUtils.h"
+#include "../MatrixUtils.h"
 #include "SceneUtils.h"
 #include <algorithm>
 

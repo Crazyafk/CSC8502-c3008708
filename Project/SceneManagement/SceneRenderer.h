@@ -1,5 +1,5 @@
 #pragma once
-#include "Renderer.h"
+#include "../Renderer.h"
 #include "Scene.h"
 
 #include "./Shaders/glslinterop.h"
