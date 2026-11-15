@@ -14,7 +14,8 @@ namespace Project {
 
 		void RenderFrame() override;
 	protected:
-		void PopulateScene();
+		void BeforeFirstFrame() override;
+		virtual void PopulateScene() {};
 		void UpdateUBO();
 		void BuildNodeLists(SharedNode from);
 		void SortNodeLists();

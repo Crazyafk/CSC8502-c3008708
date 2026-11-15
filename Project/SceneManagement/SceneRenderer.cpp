@@ -17,7 +17,6 @@ SceneRenderer::SceneRenderer() : Renderer(),
 	shader("UniversalVertex.glsl", "UniversalFragment.glsl")
 {
 	scene = std::make_shared<Scene>();
-	PopulateScene();
 
 	defaultCamera->SetPosition({ -0.5f, 1.5, -3.0f })
 		.SetPitch(0.0f)
@@ -36,36 +35,9 @@ void SceneRenderer::RenderFrame() {
 	ClearNodeLists();
 }
 
-void SceneRenderer::PopulateScene() {
-	GLTFScene tempSceneA;
-	GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", tempSceneA);
-	SharedNode cesiumMan = SceneNode::FromGLTFScene(tempSceneA, scene);
-	cesiumMan->SetLocalMatrix(Matrix::Translation(Vector3{ 0,0,0 })
-		* Matrix::Rotation(90.0f, Vector3(0, 1, 0))
-		* Matrix::Rotation(270.0f, Vector3(1, 0, 0))
-		* Matrix::Scale(Vector3{ 1,1,1 }));
-	SharedNode cesiumManMesh;
-	cesiumMan->FindMeshNode(cesiumManMesh);
-	cesiumManMesh->SetAnimation(0, scene);
-
-	GLTFScene tempSceneB;
-	GLTFLoader::Load("../GLTF/DamagedHelmet/DamagedHelmet.gltf", tempSceneB);
-	SharedNode helmet = SceneNode::FromGLTFScene(tempSceneB, scene);
-	helmet->SetLocalMatrix(Matrix::Translation(Vector3{ -1, 1.5, 0 })
-		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
-		* Matrix::Rotation(90.0f, Vector3(1, 0, 0))
-		* Matrix::Scale(Vector3{ 0.5f,0.5f,0.5f }));
-
-	GLTFScene tempSceneC;
-	GLTFLoader::Load("../GLTF/BugattiTrack/scene.gltf", tempSceneC);
-	CentreNodes(tempSceneC);
-	SharedNode world = SceneNode::FromGLTFScene(tempSceneC, scene);
-	world->SetLocalMatrix(Matrix::Translation(Vector3{ 0, -10, 0 })
-		* Matrix::Rotation(180.0f, Vector3(0, 1, 0))
-		* Matrix::Rotation(270.0f, Vector3(1, 0, 0))
-		* Matrix::Scale(Vector3{ 1,1,1 }));
-
-	scene->UploadMeshes(this);
+void SceneRenderer::BeforeFirstFrame() {
+	std::cout << "Populating Scene!";
+	PopulateScene();
 }
 
 void SceneRenderer::UpdateUBO() {
