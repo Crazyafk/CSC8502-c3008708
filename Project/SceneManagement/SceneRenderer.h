@@ -40,6 +40,6 @@ namespace Project {
 		StructuredOGLBuffer<FrameConstants> frameConstants;
 		std::vector<SharedNode> opaqueNodeList;
 		std::vector<SharedNode> transparentNodeList;
-		SkyBox skybox{ nullptr, nullptr, OGLShader("SkyboxVertex.glsl", "SkyboxFragment.glsl"), true};
+		SkyBox skybox{ nullptr, nullptr, OGLShader("SkyboxVertex.glsl", "SkyboxFragment.glsl"), false};
 	};
 }

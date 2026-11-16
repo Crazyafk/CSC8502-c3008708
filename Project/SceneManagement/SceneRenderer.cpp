@@ -51,6 +51,7 @@ void SceneRenderer::BuildSkybox() {
 	skybox.tex = OGLTexture::LoadCubemap(
 		paths[0], paths[1], paths[2], paths[3], paths[4], paths[5]
 	);
+	skybox.initialised = true;
 }
 
 void SceneRenderer::RenderSkybox() {
