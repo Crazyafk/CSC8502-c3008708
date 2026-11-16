@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 		renderer->Render();
 
 		if (Window::GetKeyboard()->KeyPressed(KeyCodes::F1)) {
-			std::cout << renderer->GetDefaultCamera().GetPosition();
+			std::cout << renderer->GetDefaultCamera().GetPosition() << "\n";
 		}
 	}
 

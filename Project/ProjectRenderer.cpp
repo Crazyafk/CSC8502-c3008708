@@ -47,7 +47,34 @@ namespace Project {
 		scene->UploadMeshes(this);
 	}
 
-	void ProjectRenderer::BehaviourUpdate() {
+	void ProjectRenderer::BeforeFirstFrame() {
+		SceneRenderer::BeforeFirstFrame();
 
+		defaultCamera->SetPosition(cameraPath[0]);
+		OnWaypointArrival();
+	}
+
+	void ProjectRenderer::BehaviourUpdate() {
+		UpdateCameraPath();
+	}
+
+	void ProjectRenderer::UpdateCameraPath() {
+		if (nextWaypoint == -1) return;
+		if (isCameraAtWaypoint()) OnWaypointArrival();
+		defaultCamera->MoveYawRelative(cameraMoveVector * frameTime, true);
+	}
+
+	bool ProjectRenderer::isCameraAtWaypoint() {
+		Vector3 diff = defaultCamera->GetPosition() - cameraPath[nextWaypoint];
+		return (Maths::Vector::Length(diff) < waypointChangeDist);
+	}
+
+	void ProjectRenderer::OnWaypointArrival() {
+		nextWaypoint++;
+		if (nextWaypoint == cameraPath.size()) { 
+			nextWaypoint = -1;
+			return;
+		}
+		defaultCamera->LookTowards(cameraPath[nextWaypoint]);
 	}
 }
