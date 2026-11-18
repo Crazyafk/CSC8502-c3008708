@@ -47,7 +47,7 @@ void SceneRenderer::BuildSkybox() {
 	std::vector<std::string> paths = GetSkyboxTexturePaths();
 	if (paths.empty()) return;
 
-	skybox.mesh = CreateSkyboxCube();
+	skybox.mesh = CreateSkyboxQuad();
 	skybox.tex = OGLTexture::LoadCubemap(
 		paths[0], paths[1], paths[2], paths[3], paths[4], paths[5]
 	);

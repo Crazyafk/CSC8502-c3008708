@@ -3,9 +3,11 @@ uniform samplerCube skybox;
 
 out vec4 FragColor;
 
-in vec3 TexCoords;
+in Vertex {
+    vec3 ViewDir ;
+} IN ;
 
 void main()
 {    
-    FragColor = texture(skybox, TexCoords);
+    FragColor = texture(skybox, normalize(IN.ViewDir));
 }

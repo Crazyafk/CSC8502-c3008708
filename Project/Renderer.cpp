@@ -92,6 +92,26 @@ UniqueOGLMesh Renderer::CreateQuad() {
 	return quadMesh;
 }
 
+UniqueOGLMesh Renderer::CreateSkyboxQuad() {
+	UniqueOGLMesh skyMesh = std::make_unique<OGLMesh>();
+	skyMesh->SetVertexPositions({
+		Vector3(-1, -1, -1),
+		Vector3(1, -1, -1),
+		Vector3(1, 1, -1),
+		Vector3(-1, 1, -1),
+		});
+
+	skyMesh->SetVertexIndices({
+		0,1,3,2
+		});
+
+	skyMesh->SetDebugName("Skybox Quad");
+	skyMesh->SetPrimitiveType(NCL::GeometryPrimitive::TriangleStrip);
+	skyMesh->UploadToGPU(this);
+
+	return skyMesh;
+}
+
 UniqueOGLMesh Renderer::CreateSkyboxCube() {
 	UniqueOGLMesh skyMesh = std::make_unique<OGLMesh>();
 	skyMesh->SetVertexPositions({

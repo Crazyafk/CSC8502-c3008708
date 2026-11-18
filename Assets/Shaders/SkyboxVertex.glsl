@@ -8,10 +8,16 @@ layout (std140, binding = 0) uniform Constants {
 
 uniform mat4 viewNoTranslation;
 
-out vec3 TexCoords;
+out Vertex{
+    vec3 ViewDir;
+} OUT;
 
 void main()
 {
-    TexCoords = position;
-    gl_Position = frameConstants.projMatrix * viewNoTranslation * vec4(position, 1.0);
+    vec3 pos = position;
+    mat4 invProj = inverse(frameConstants.projMatrix);
+    pos.xy *= vec2(invProj[0][0], invProj[1][1]);
+    pos.z = -1.0f;
+    OUT.ViewDir = transpose(mat3(frameConstants.viewMatrix)) * normalize(pos);
+    gl_Position = vec4(position, 1.0f);
 }
