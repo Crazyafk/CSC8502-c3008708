@@ -12,6 +12,8 @@
 #include "../NCLCoreClasses/Camera.h"
 #include "../NCLCoreClasses/Window.h"
 
+#include "PointLight.h"
+
 namespace Project {
 	using namespace NCL;
 	using namespace NCL::Rendering;
@@ -47,7 +49,7 @@ namespace Project {
 		void BindBufferAsSSBO(const OGLBuffer& b, GLuint slotID);
 
 		void SetCameraUniforms(const Camera& c, GLuint slot);
-		//void SetLightUniforms(const Light& l, GLuint slot);
+		void SetLightUniforms(const PointLight& l);
 
 		void CalculateNormals(Mesh& m) const;
 		void CalculateNormalsTangents(Mesh& m) const;
