@@ -7,12 +7,14 @@ namespace Project {
 	public:
 		ProjectRenderer();
 		~ProjectRenderer() = default;
+		void ToggleCamPath() { doCamPath = !doCamPath; }
 	protected:
 		std::vector<std::string> GetSkyboxTexturePaths() override;
 		void PopulateScene() override;
 		void BeforeFirstFrame() override;
 		void BehaviourUpdate() override;
 
+		bool doCamPath = true;
 		float cameraSpeed = 30.0f;
 		Vector3 cameraMoveVector = { 0, 0, -cameraSpeed }; //don't ask why -z, yaw-relative, is forwards. just is.
 		float waypointChangeDist = 0.5f;

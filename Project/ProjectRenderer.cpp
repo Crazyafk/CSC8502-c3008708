@@ -59,6 +59,7 @@ namespace Project {
 	}
 
 	void ProjectRenderer::UpdateCameraPath() {
+		if (!doCamPath) return;
 		if (nextWaypoint == -1) return;
 		if (isCameraAtWaypoint()) OnWaypointArrival();
 		defaultCamera->MoveYawRelative(cameraMoveVector * frameTime, true);

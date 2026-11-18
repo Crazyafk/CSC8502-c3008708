@@ -86,6 +86,9 @@ int main(int argc, char* argv[]) {
 		if (Window::GetKeyboard()->KeyPressed(KeyCodes::F1)) {
 			std::cout << renderer->GetDefaultCamera().GetPosition() << "\n";
 		}
+		if (Window::GetKeyboard()->KeyPressed(KeyCodes::F2)) {
+			renderer->ToggleCamPath();
+		}
 	}
 
 	Window::DestroyGameWindow();
