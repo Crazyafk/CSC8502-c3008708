@@ -6,12 +6,12 @@ namespace Project {
 
 	std::vector<std::string> ProjectRenderer::GetSkyboxTexturePaths() {
 		return {
-			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0002.png",
-			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0005.png",
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0004.png",
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0001.png",
 			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0003.png",
 			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0006.png",
-			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0001.png",
-			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0004.png"
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0002.png",
+			NCL::Assets::TEXTUREDIR + "Cubemap/skyrender0005.png"
 		};
 	}
 
