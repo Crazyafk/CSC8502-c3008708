@@ -68,7 +68,7 @@ namespace Project {
 		Controller* controller;
 
 		std::vector<SharedLight> lights;
-		StructuredOGLBuffer<LightData> lightBuffer;
+		StructuredOGLBuffer<NCL::Rendering::LightData> lightBuffer = StructuredOGLBuffer<NCL::Rendering::LightData>(16); //matches hardcoded max_lights in UniversalFragment.glsl;
 
 		GLTFScene gltf;
 

@@ -9,7 +9,7 @@
 
 namespace NCL::Rendering {
 #include "./Shaders/glslInterop.h"
-	//	#include "./Shaders/LightStruct.h"
+#include "./Shaders/LightStructs.h"
 }
 
 using namespace Project;

@@ -5,6 +5,7 @@ using namespace NCL::Maths;
 
 namespace Project {
 	enum LightType : int {
+		Invalid,
 		Point,
 		Direction
 	};

@@ -1,10 +1,15 @@
-
+#pragma once
 //type enum - matching Light.h
-const int LightType_Point = 0;
-const int LightType_Direction = 1;
+//0 is invalid
+const int LightType_Point = 1;
+const int LightType_Direction = 2;
 
 struct LightData {
 	int type;
+	float dummyA;
+	float dummyB;
+	float dummyC;
+
 	vec4 colour;
 
 	//for the following, meaning is type dependent
