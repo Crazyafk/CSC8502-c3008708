@@ -78,6 +78,7 @@ void SceneRenderer::UpdateUBO() {
 	frameConstants.elements[0].viewProjMatrix = defaultCamera->BuildProjectionMatrix() * defaultCamera->BuildViewMatrix();
 	frameConstants.elements[0].frameTime = frameTime;
 	frameConstants.elements[0].totalTime = totalRunTime;
+	frameConstants.elements[0].cameraPos = defaultCamera->GetPosition();
 
 	frameConstants.GPUSync();
 }

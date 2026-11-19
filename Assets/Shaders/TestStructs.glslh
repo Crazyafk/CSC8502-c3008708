@@ -9,4 +9,7 @@ struct FrameConstants {
 
     float dummyA;
     float dummyB;
+
+    vec3 cameraPos;
+    float dummyC;
 };
