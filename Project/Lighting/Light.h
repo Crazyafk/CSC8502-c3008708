@@ -4,10 +4,10 @@
 using namespace NCL::Maths;
 
 namespace Project {
-	enum LightType : int {
-		Invalid,
-		Point,
-		Direction
+	enum class LightType: int{
+		Invalid = 0,
+		Point = 1,
+		Direction = 2
 	};
 	class Light {
 	public:

@@ -17,9 +17,18 @@ namespace Project {
 
 	void ProjectRenderer::PopulateScene() {
 		lights.push_back( std::make_shared<PointLight>(
-			Vector3(-18.4, -4.17863, -48.3475),
-			Vector4(1, 1, 1, 1),
+			Vector3(-18.4, -4.18, -48.35),
+			Vector4(1, 0, 0, 1),
 			10.0f
+		));
+		lights.push_back(std::make_shared<PointLight>(
+			Vector3( -22.86, -5.67, 20.13),
+			Vector4(0, 0, 1, 1),
+			10.0f
+		));
+		lights.push_back(std::make_shared<DirectionLight>(
+			Vector3(0, 1, 0),
+			Vector4(0.0f, 0.0f, 0.0f, 1)
 		));
 
 		GLTFScene tempSceneA;

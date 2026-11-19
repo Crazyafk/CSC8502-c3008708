@@ -12,7 +12,9 @@
 #include "../NCLCoreClasses/Camera.h"
 #include "../NCLCoreClasses/Window.h"
 
+#include "Lighting/Light.h"
 #include "Lighting/PointLight.h"
+#include "Lighting/DirectionLight.h"
 
 namespace NCL::Rendering {
 #include "./Shaders/glslInterop.h"

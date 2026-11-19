@@ -339,13 +339,17 @@ void Renderer::UploadLightUniforms() {
 
 	for (int i = 0; const SharedLight& l : lights) {
 		lightBuffer.elements[i].colour = l->GetColour();
-		lightBuffer.elements[i].type = l->GetType();
+		lightBuffer.elements[i].type = static_cast<int>(l->GetType());
+		PointLight& p = *static_cast<PointLight*>(l.get());
+		DirectionLight& d = *static_cast<DirectionLight*>(l.get());
 
 		switch (l->GetType()) {
 		case LightType::Point:
-			PointLight& p = *static_cast<PointLight*>(l.get());
 			lightBuffer.elements[i].vec3_A = p.GetPosition();
 			lightBuffer.elements[i].float_A = p.GetRadius();
+			break;
+		case LightType::Direction:
+			lightBuffer.elements[i].vec3_A = d.GetDirection();
 			break;
 		}
 		i++;

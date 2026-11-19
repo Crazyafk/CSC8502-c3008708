@@ -1,35 +1,47 @@
 //to be included in a fragment shader, not used standalone
 
-void phong_point(in vec4 diffuseColour, in int lightIndex, out vec4 resultColour)
+const float gloss = 60.0f;
+// x = diffuse, y = specular, z = ambient
+const vec3 point_factors = vec3(1.0f, 0.33f, 0f);
+const vec3 direction_factors = vec3(1.0f, 0.33f, 0.1f);
+
+void phong_general(in vec4 diffuseColour, in int lightIndex, vec3 incident, float attenuation, vec3 factors, out vec4 resultColour)
 {
-	float gloss = 60.0f;
-
-	float diffuseFactor = 1.0f;
-	float specularFactor = 0.33f;
-	float ambientFactor = 0.1f;
-
-	vec4 pointLightColour = lights[lightIndex].colour;
-	vec3 pointLightPos = lights[lightIndex].vec3_A;
-	float pointLightRadius = lights[lightIndex].float_A;
-
-	vec3 incident = normalize(pointLightPos - IN.worldPos);
+	vec3 lightColour = lights[lightIndex].colour.rgb;
 	vec3 viewDir = normalize(frameConstants.cameraPos - IN.worldPos);
 	vec3 halfDir = normalize(incident + viewDir);
 
 	float lambert = max(dot(incident, IN.normal), 0.0f);
-	float dist = length(pointLightPos - IN.worldPos);
-	float attenuation = 1.0 - clamp(dist / pointLightRadius, 0.0, 1.0);
 
 	float specular = clamp(dot(halfDir, IN.normal), 0.0, 1.0);
 	specular = pow(specular, gloss);
 
-	diffuseColour = vec4(diffuseColour.rgb + pointLightColour.rgb, diffuseColour.a);
+	diffuseColour = vec4(diffuseColour.rgb + lightColour, diffuseColour.a);
 
-	vec3 total = diffuseColour.rgb * lambert * attenuation * diffuseFactor;
-	total += (pointLightColour.rgb * specular) * attenuation * specularFactor;
-	total += diffuseColour.rgb * ambientFactor;
+	vec3 total = diffuseColour.rgb * lambert * attenuation * factors.x;
+	total += (lightColour * specular) * attenuation * factors.y;
+	total += diffuseColour.rgb * factors.z;
 
 	resultColour = vec4(total, diffuseColour.a);
+}
+
+void phong_point(in vec4 diffuseColour, in int lightIndex, out vec4 resultColour)
+{
+	vec3 pointLightPos = lights[lightIndex].vec3_A;
+	float pointLightRadius = lights[lightIndex].float_A;
+
+	vec3 incident = normalize(pointLightPos - IN.worldPos);
+	float dist = length(pointLightPos - IN.worldPos);
+	float attenuation = 1.0 - clamp(dist / pointLightRadius, 0.0, 1.0);
+
+	phong_general(diffuseColour, lightIndex, incident, attenuation, point_factors, resultColour); 
+}
+
+void phong_direction(in vec4 diffuseColour, in int lightIndex, out vec4 resultColour)
+{
+	vec3 incident = lights[lightIndex].vec3_A;
+	
+	phong_general(diffuseColour, lightIndex, incident, 1.0f, direction_factors, resultColour);
 }
 
 void phong(in vec4 diffuseColour, out vec4 resultColour)
@@ -38,6 +50,7 @@ void phong(in vec4 diffuseColour, out vec4 resultColour)
 	{
 		vec4 lightContribution = vec4 (0, 0, 0, 0);
 		if(lights[i].type == LightType_Point) { phong_point(diffuseColour, i, lightContribution); }
+		else if(lights[i].type == LightType_Direction) { phong_direction(diffuseColour, i, lightContribution); }
 		resultColour += lightContribution;
 	}
 }
