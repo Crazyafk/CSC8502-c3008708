@@ -20,6 +20,8 @@ out Vertex {
     vec3 worldPos;
 } OUT;
 
+#include "AnimateSkeletal.glsl"
+
 void main(void) {
     vec4 localPos   = vec4(position, 1.0f);
     vec4 pos = vec4(0, 0, 0, 0);
@@ -28,17 +30,8 @@ void main(void) {
     if(debug_nodeID == -1){ localPos = vec4(0,0,0,0); }
     if(debug_distanceFromCamera == -10000){ localPos = vec4(0,0,0,0); }
 
-    if(isAnimated) {
-        for (int i = 0; i < 4; ++i) {
-            int     jointIndex  = jointIndices[i];
-            float   jointWeight = jointWeights[i];
-
-            pos += joints[jointIndex] * localPos * jointWeight;
-        }
-    }
-    else{
-        pos = localPos;
-    }
+    skel_Animate(localPos, pos);
+    
     vec4 worldPos = modelMatrix * pos;
     gl_Position = frameConstants.viewProjMatrix * worldPos;
 
