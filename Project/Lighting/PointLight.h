@@ -5,7 +5,7 @@
 using namespace NCL::Maths;
 
 namespace Project {
-	class PointLight : Light {
+	class PointLight : public Light {
 	public:
 		PointLight() { type = LightType::Point; }
 		PointLight(const Vector3& _position, const Vector4& _colour, float _radius) {
@@ -21,12 +21,8 @@ namespace Project {
 
 		float GetRadius() const { return radius; }
 		void SetRadius(float _radius) { radius = _radius; }
-
-		Vector4 GetColour() const { return colour; }
-		void SetColour(const Vector4& _colour) { colour = _colour; }
 	protected:
 		Vector3 position;
 		float radius;
-		Vector4 colour;
 	};
 }
