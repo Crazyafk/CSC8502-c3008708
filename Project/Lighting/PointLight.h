@@ -1,14 +1,15 @@
 #pragma once
-
+#include "Light.h"
 #include "../../NCLCoreClasses/Vector.h"
 
 using namespace NCL::Maths;
 
 namespace Project {
-	class PointLight {
+	class PointLight : Light {
 	public:
-		PointLight() {}
+		PointLight() { type = LightType::Point; }
 		PointLight(const Vector3& _position, const Vector4& _colour, float _radius) {
+			type = LightType::Point;
 			position = _position;
 			colour = _colour;
 			radius = _radius;
