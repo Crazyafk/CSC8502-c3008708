@@ -1,6 +1,6 @@
 #pragma once
 #include "../Renderer.h"
-#include "../PointLight.h"
+#include "../Lighting/PointLight.h"
 #include "Scene.h"
 
 #include "./Shaders/glslinterop.h"

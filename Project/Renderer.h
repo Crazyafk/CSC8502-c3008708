@@ -12,7 +12,7 @@
 #include "../NCLCoreClasses/Camera.h"
 #include "../NCLCoreClasses/Window.h"
 
-#include "PointLight.h"
+#include "Lighting/PointLight.h"
 
 namespace Project {
 	using namespace NCL;

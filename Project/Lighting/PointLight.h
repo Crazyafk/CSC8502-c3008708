@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../NCLCoreClasses/Vector.h"
+#include "../../NCLCoreClasses/Vector.h"
 
 using namespace NCL::Maths;
 
