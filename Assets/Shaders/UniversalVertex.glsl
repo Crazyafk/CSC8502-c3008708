@@ -14,15 +14,20 @@ layout (std140, binding = 0) uniform Constants {
 uniform mat4 joints[128];
 
 out Vertex {
+    vec4 colour;
     vec2 texCoord;
+    vec3 normal;
+    vec3 worldPos;
 } OUT;
 
 void main(void) {
-    mat4 mvp = frameConstants.viewProjMatrix * modelMatrix;
     vec4 localPos   = vec4(position, 1.0f);
     vec4 pos = vec4(0, 0, 0, 0);
+
+    //if we don't pretend to use the debug variables they'll be optimised out
     if(debug_nodeID == -1){ localPos = vec4(0,0,0,0); }
     if(debug_distanceFromCamera == -10000){ localPos = vec4(0,0,0,0); }
+
     if(isAnimated) {
         for (int i = 0; i < 4; ++i) {
             int     jointIndex  = jointIndices[i];
@@ -34,6 +39,13 @@ void main(void) {
     else{
         pos = localPos;
     }
-    gl_Position = mvp * vec4(pos.xyz, 1.0);
+    vec4 worldPos = modelMatrix * pos;
+    gl_Position = frameConstants.viewProjMatrix * worldPos;
+
+    OUT.colour = colour;
     OUT.texCoord = texCoord;
+    OUT.worldPos = worldPos.xyz;
+
+    mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
+    OUT.normal = normalize(normalMatrix * normalize(normal));
 }
