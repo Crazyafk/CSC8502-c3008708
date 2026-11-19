@@ -30,7 +30,7 @@ void SceneRenderer::RenderFrame() {
 	scene->Update(frameTime);
 
 	BindShader(shader);
-	if (light) SetLightUniforms(*light);
+	UploadLightUniforms();
 
 	BuildNodeLists(scene->GetRoot());
 	SortNodeLists();

@@ -16,11 +16,11 @@ namespace Project {
 	}
 
 	void ProjectRenderer::PopulateScene() {
-		light = std::make_unique<PointLight>(
+		lights.push_back( std::make_shared<PointLight>(
 			Vector3(-18.4, -4.17863, -48.3475),
 			Vector4(1, 1, 1, 1),
 			10.0f
-		);
+		));
 
 		GLTFScene tempSceneA;
 		GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", tempSceneA);

@@ -18,4 +18,5 @@ namespace Project {
 		LightType type;
 		Vector4 colour;
 	};
+	typedef std::shared_ptr<Light> SharedLight;
 }

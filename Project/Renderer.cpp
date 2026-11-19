@@ -331,21 +331,27 @@ void Renderer::BindBufferAsSSBO(const OGLBuffer& b, GLuint slotID) {
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, slotID, b.gpuID);
 }
 
-void Renderer::SetLightUniforms(const PointLight& l) {
+void Renderer::UploadLightUniforms() {
 	assert(m_boundShader);
 	GLuint id = m_boundShader->GetProgramID();
 
-	Vector3 pos = l.GetPosition();
-	Vector4 colour = l.GetColour();
+	for(const SharedLight & l : lights) {
+		Vector4 colour = l->GetColour();
+		glUniform4fv(glGetUniformLocation(id, "pointLightColour"),
+			1, (float*)&colour);
 
-	glUniform3fv(glGetUniformLocation(id, "pointLightPos"),
-		1, (float*)&pos);
+		switch (l->GetType()) {
+		case LightType::Point:
+			PointLight& p = *static_cast<PointLight*>(l.get());
+			Vector3 pos = p.GetPosition();
 
-	glUniform1f(glGetUniformLocation(id, "pointLightRadius"),
-		l.GetRadius());
-
-	glUniform4fv(glGetUniformLocation(id, "pointLightColour"),
-		1, (float*)&colour);
+			glUniform3fv(glGetUniformLocation(id, "pointLightPos"),
+				1, (float*)&pos);
+			glUniform1f(glGetUniformLocation(id, "pointLightRadius"),
+				p.GetRadius());
+			break;
+		}
+	}
 }
 
 void Renderer::BindTextureToPipeline(GLuint texID, const std::string& name, GLuint texUnit, GLuint texType) {

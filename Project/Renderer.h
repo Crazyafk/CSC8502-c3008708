@@ -49,7 +49,7 @@ namespace Project {
 		void BindBufferAsSSBO(const OGLBuffer& b, GLuint slotID);
 
 		void SetCameraUniforms(const Camera& c, GLuint slot);
-		void SetLightUniforms(const PointLight& l);
+		void UploadLightUniforms();
 
 		void CalculateNormals(Mesh& m) const;
 		void CalculateNormalsTangents(Mesh& m) const;
@@ -61,6 +61,8 @@ namespace Project {
 		Camera* defaultCamera;
 
 		Controller* controller;
+
+		std::vector<SharedLight> lights;
 
 		GLTFScene gltf;
 
