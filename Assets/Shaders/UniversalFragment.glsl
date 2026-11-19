@@ -1,5 +1,6 @@
 #version 420 core
 #include "TestStructs.glslh"
+#include "LightStructs.glslh"
 
 uniform sampler2D diffuseColourTex;
 uniform bool hasTexture;
