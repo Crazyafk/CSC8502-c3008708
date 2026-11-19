@@ -29,9 +29,11 @@ void SceneRenderer::RenderFrame() {
 	RenderSkybox();
 	scene->Update(frameTime);
 
+	BindShader(shader);
+	if (light) SetLightUniforms(*light);
+
 	BuildNodeLists(scene->GetRoot());
 	SortNodeLists();
-	BindShader(shader);
 	DrawNodes();
 
 	ClearNodeLists();

@@ -1,5 +1,6 @@
 #pragma once
 #include "../Renderer.h"
+#include "../PointLight.h"
 #include "Scene.h"
 
 #include "./Shaders/glslinterop.h"
@@ -37,6 +38,7 @@ namespace Project {
 
 		OGLShader shader;
 		SharedScene scene;
+		std::unique_ptr<PointLight> light;
 		StructuredOGLBuffer<FrameConstants> frameConstants;
 		std::vector<SharedNode> opaqueNodeList;
 		std::vector<SharedNode> transparentNodeList;
