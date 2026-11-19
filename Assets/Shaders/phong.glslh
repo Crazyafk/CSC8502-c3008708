@@ -1,12 +1,16 @@
 //to be included in a fragment shader, not used standalone
 
-void phong(in vec4 diffuseColour, out vec4 resultColour)
+void phong_point(in vec4 diffuseColour, in int lightIndex, out vec4 resultColour)
 {
 	float gloss = 60.0f;
 
 	float diffuseFactor = 1.0f;
 	float specularFactor = 0.33f;
 	float ambientFactor = 0.1f;
+
+	vec4 pointLightColour = lights[lightIndex].colour;
+	vec3 pointLightPos = lights[lightIndex].vec3_A;
+	float pointLightRadius = lights[lightIndex].float_A;
 
 	vec3 incident = normalize(pointLightPos - IN.worldPos);
 	vec3 viewDir = normalize(frameConstants.cameraPos - IN.worldPos);
@@ -26,4 +30,14 @@ void phong(in vec4 diffuseColour, out vec4 resultColour)
 	total += diffuseColour.rgb * ambientFactor;
 
 	resultColour = vec4(total, diffuseColour.a);
+}
+
+void phong(in vec4 diffuseColour, out vec4 resultColour)
+{
+	for(int i = 0; i < max_lights; i++)
+	{
+		vec4 lightContribution = vec4 (0, 0, 0, 0);
+		if(lights[i].type == LightType_Point) { phong_point(diffuseColour, i, lightContribution); }
+		resultColour += lightContribution;
+	}
 }

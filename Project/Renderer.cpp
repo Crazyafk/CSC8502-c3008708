@@ -335,23 +335,22 @@ void Renderer::UploadLightUniforms() {
 	assert(m_boundShader);
 	GLuint id = m_boundShader->GetProgramID();
 
-	for(const SharedLight & l : lights) {
-		Vector4 colour = l->GetColour();
-		glUniform4fv(glGetUniformLocation(id, "pointLightColour"),
-			1, (float*)&colour);
+	BindBufferAsUBO(lightBuffer, 1); //1 Matches the binding hard-coded binding in UniversalFragment.glsl
+
+	for (int i = 0; const SharedLight& l : lights) {
+		lightBuffer.elements[i].colour = l->GetColour();
+		lightBuffer.elements[i].type = l->GetType();
 
 		switch (l->GetType()) {
 		case LightType::Point:
 			PointLight& p = *static_cast<PointLight*>(l.get());
-			Vector3 pos = p.GetPosition();
-
-			glUniform3fv(glGetUniformLocation(id, "pointLightPos"),
-				1, (float*)&pos);
-			glUniform1f(glGetUniformLocation(id, "pointLightRadius"),
-				p.GetRadius());
+			lightBuffer.elements[i].vec3_A = p.GetPosition();
+			lightBuffer.elements[i].float_A = p.GetRadius();
 			break;
 		}
+		i++;
 	}
+	lightBuffer.GPUSync();
 }
 
 void Renderer::BindTextureToPipeline(GLuint texID, const std::string& name, GLuint texUnit, GLuint texType) {

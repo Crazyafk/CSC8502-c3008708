@@ -1,17 +1,19 @@
 #version 420 core
 #include "TestStructs.glslh"
-#include "LightStructs.glslh"
+#include "LightStructs.h"
+
+const int max_lights = 16;
 
 uniform sampler2D diffuseColourTex;
 uniform bool hasTexture;
 uniform vec4 albedoColour;
 
-uniform vec3 pointLightPos;
-uniform float pointLightRadius;
-uniform vec4 pointLightColour;
-
 layout (std140, binding = 0) uniform Constants {
     FrameConstants frameConstants;
+};
+
+layout (std140, binding = 1) uniform Lights {
+	LightData lights[max_lights];
 };
 
 in Vertex {

@@ -3,7 +3,7 @@
 const int LightType_Point = 0;
 const int LightType_Direction = 1;
 
-struct Light {
+struct LightData {
 	int type;
 	vec4 colour;
 

@@ -14,6 +14,11 @@
 
 #include "Lighting/PointLight.h"
 
+namespace NCL::Rendering {
+#include "./Shaders/glslInterop.h"
+#include "./Shaders/LightStructs.h"
+}
+
 namespace Project {
 	using namespace NCL;
 	using namespace NCL::Rendering;
@@ -63,6 +68,7 @@ namespace Project {
 		Controller* controller;
 
 		std::vector<SharedLight> lights;
+		StructuredOGLBuffer<LightData> lightBuffer;
 
 		GLTFScene gltf;
 
