@@ -1,0 +1,29 @@
+//to be included in a fragment shader, not used standalone
+
+void phong(in vec4 diffuseColour, out vec4 resultColour)
+{
+	float gloss = 60.0f;
+
+	float diffuseFactor = 1.0f;
+	float specularFactor = 0.33f;
+	float ambientFactor = 0.1f;
+
+	vec3 incident = normalize(pointLightPos - IN.worldPos);
+	vec3 viewDir = normalize(frameConstants.cameraPos - IN.worldPos);
+	vec3 halfDir = normalize(incident + viewDir);
+
+	float lambert = max(dot(incident, IN.normal), 0.0f);
+	float dist = length(pointLightPos - IN.worldPos);
+	float attenuation = 1.0 - clamp(dist / pointLightRadius, 0.0, 1.0);
+
+	float specular = clamp(dot(halfDir, IN.normal), 0.0, 1.0);
+	specular = pow(specular, gloss);
+
+	diffuseColour = vec4(diffuseColour.rgb + pointLightColour.rgb, diffuseColour.a);
+
+	vec3 total = diffuseColour.rgb * lambert * attenuation * diffuseFactor;
+	total += (pointLightColour.rgb * specular) * attenuation * specularFactor;
+	total += diffuseColour.rgb * ambientFactor;
+
+	resultColour = vec4(total, diffuseColour.a);
+}

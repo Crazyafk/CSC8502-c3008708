@@ -1,7 +1,17 @@
-#version 330 core
-uniform sampler2D diffuseTex;
+#version 420 core
+#include "TestStructs.glslh"
+
+uniform sampler2D diffuseColourTex;
 uniform bool hasTexture;
 uniform vec4 albedoColour;
+
+uniform vec3 pointLightPos;
+uniform float pointLightRadius;
+uniform vec4 pointLightColour;
+
+layout (std140, binding = 0) uniform Constants {
+    FrameConstants frameConstants;
+};
 
 in Vertex {
 	vec4 colour;
@@ -12,11 +22,15 @@ in Vertex {
 
 out vec4 fragColour;
 
+#include "phong.glslh"
+
 void main(void) {
+	vec4 diffuseColour;
 	if(hasTexture){
-		fragColour = texture(diffuseTex, IN.texCoord);
+		diffuseColour = texture(diffuseColourTex, IN.texCoord);
 	}
 	else{
-		fragColour = albedoColour;
+		diffuseColour = albedoColour;
 	}
+	phong(diffuseColour, fragColour);
 }
