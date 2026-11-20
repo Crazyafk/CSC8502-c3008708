@@ -30,6 +30,8 @@ namespace Project {
 			Vector3(0, 1, 0),
 			Vector4(0.0f, 0.0f, 0.0f, 1)
 		));
+		shadowingLight = static_pointer_cast<DirectionLight>(lights[2]);
+		shadowingLight->AddShadows(Vector3(0, 50, 0));
 
 		GLTFScene tempSceneA;
 		GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", tempSceneA);

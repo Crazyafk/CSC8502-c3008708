@@ -5,7 +5,9 @@
 const int max_lights = 16;
 
 uniform sampler2D diffuseColourTex;
+uniform sampler2D shadowTex;
 uniform bool hasTexture;
+uniform bool hasShadows;
 uniform vec4 albedoColour;
 
 layout (std140, binding = 0) uniform Constants {

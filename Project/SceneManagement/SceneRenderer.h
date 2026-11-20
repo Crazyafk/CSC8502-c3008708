@@ -28,15 +28,18 @@ namespace Project {
 		void BuildSkybox();
 		void RenderSkybox();
 		void UpdateUBO();
+		void ShadowDrawCallback(const DirectionLight& light) override;
 		void BuildNodeLists(SharedNode from);
 		void SortNodeLists();
 		void ClearNodeLists();
 		void DrawNodes();
+		void DrawOpaqueNodes();
+		void DrawTransparentNodes();
 		void DrawNode(SharedNode node);
 		void AnimateNode(SharedNode node);
 
 		SharedScene scene;
-		std::unique_ptr<PointLight> light;
+		std::shared_ptr<DirectionLight> shadowingLight;
 		StructuredOGLBuffer<FrameConstants> frameConstants;
 		std::vector<SharedNode> opaqueNodeList;
 		std::vector<SharedNode> transparentNodeList;

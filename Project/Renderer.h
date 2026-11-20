@@ -44,6 +44,8 @@ namespace Project {
 		UniqueOGLMesh CreateSkyboxQuad();
 
 		void DrawShadowScene(const DirectionLight& light);
+		virtual void ShadowDrawCallback(const DirectionLight& light) {};
+		void UploadShadowTex();
 
 		GLuint	CreateTexture(uint32_t width, uint32_t height, GLint internalformat, bool allocMips = false);
 
@@ -71,9 +73,10 @@ namespace Project {
 		OGLShader defaultShader = OGLShader("UniversalVertex.glsl", "UniversalFragment.glsl");
 		OGLShader shadowShader = OGLShader("ShadowVertex.glsl", "ShadowFragment.glsl");
 
-		SharedOGLTexture shadowTex;
+		SharedOGLTexture shadowTex = std::make_shared<OGLTexture>();
 		GLuint shadowFBO; //maybe FBO class in future? better understanding of workings and uses needed
 		StructuredOGLBuffer<NCL::Rendering::FrameConstants> shadowUBO; 
+		bool drawingShadows = false;
 
 		Camera* defaultCamera;
 

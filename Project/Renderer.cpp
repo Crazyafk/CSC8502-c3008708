@@ -22,7 +22,7 @@ Renderer::Renderer() : OGLRenderer(*Window::GetWindow()),
 	shadowUBO(1)
 	{
 	if (!defaultShader.LoadSuccess() || !shadowShader.LoadSuccess()) {
-		return;
+		//return;
 	}
 
 	GLTFLoader::SetTextureConstructionFunction(
@@ -168,7 +168,7 @@ UniqueOGLMesh Renderer::CreateSkyboxCube() {
 }
 
 void Renderer::DrawShadowScene(const DirectionLight& light) {
-	if (!light.HasShadows());
+	if (!light.HasShadows()) return;
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
 
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -187,10 +187,23 @@ void Renderer::DrawShadowScene(const DirectionLight& light) {
 
 	shadowUBO.GPUSync();
 
+	ShadowDrawCallback(light);
+	drawingShadows = true;
+
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	Vector2i viewDimensions = hostWindow.GetScreenSize();
 	glViewport(0, 0, viewDimensions.x, viewDimensions.y);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::UploadShadowTex() {
+	SetUniform("hasShadows", drawingShadows ? 1 : 0);
+	if (!drawingShadows) return;
+
+	SetUniform("shadowTex", 2);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, shadowTex->GetObjectID());
+	drawingShadows = false;
 }
 
 void Renderer::CalculateNormals(Mesh& m) const {

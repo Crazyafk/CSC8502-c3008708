@@ -28,11 +28,15 @@ void SceneRenderer::RenderFrame() {
 	RenderSkybox();
 	scene->Update(frameTime);
 
-	BindShader(defaultShader);
 	UploadLightUniforms();
 
 	BuildNodeLists(scene->GetRoot());
 	SortNodeLists();
+
+	DrawShadowScene(*shadowingLight);
+	glClear(GL_DEPTH_BUFFER_BIT); //shouldn't be needed. mysteryyyyy :3
+
+	BindShader(defaultShader);
 	DrawNodes();
 
 	ClearNodeLists();
@@ -84,6 +88,10 @@ void SceneRenderer::UpdateUBO() {
 	frameConstants.GPUSync();
 }
 
+void SceneRenderer::ShadowDrawCallback(const DirectionLight& light) {
+	DrawOpaqueNodes();
+}
+
 void SceneRenderer::BuildNodeLists(SharedNode from) {
 	// TODO: frustum checks
 
@@ -120,14 +128,21 @@ void SceneRenderer::ClearNodeLists() {
 }
 
 void SceneRenderer::DrawNodes() {
+	DrawOpaqueNodes();
+	DrawTransparentNodes();
+}
+
+void SceneRenderer::DrawOpaqueNodes() {
+	glDepthMask(GL_TRUE);
 	for (SharedNode node : opaqueNodeList) {
 		DrawNode(node);
 	}
+}
+void SceneRenderer::DrawTransparentNodes() {
 	glDepthMask(GL_FALSE);
 	for (SharedNode node : transparentNodeList) {
 		DrawNode(node);
 	}
-	glDepthMask(GL_TRUE);
 }
 
 void SceneRenderer::DrawNode(SharedNode node) {
