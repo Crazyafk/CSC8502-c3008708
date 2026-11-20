@@ -4,7 +4,6 @@
 #include "Scene.h"
 
 #include "./Shaders/glslinterop.h"
-#include "./Shaders/TestStructs.glslh"
 
 namespace Project {
 	using namespace NCL::Rendering;

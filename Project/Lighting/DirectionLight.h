@@ -17,7 +17,13 @@ namespace Project {
 
 		void SetDirection(Vector3 _direction) { direction = Vector::Normalise(_direction); }
 		Vector3 GetDirection() const { return direction; }
+
+		void AddShadows(Vector3 _mapOrigin) { shadowMapOrigin = _mapOrigin; hasShadows = true; }
+		bool HasShadows() const { return hasShadows; }
+		Vector3 GetShadowMapOrigin() const { return shadowMapOrigin; }
 	protected:
 		Vector3 direction; //defined as the incident vector
+		bool hasShadows;
+		Vector3 shadowMapOrigin; //the position from which the shadow map is drawn if set
 	};
 }

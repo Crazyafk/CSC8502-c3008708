@@ -18,6 +18,7 @@
 
 namespace NCL::Rendering {
 #include "./Shaders/glslInterop.h"
+#include "./Shaders/TestStructs.glslh"
 #include "./Shaders/LightStructs.h"
 }
 
@@ -41,6 +42,8 @@ namespace Project {
 		UniqueOGLMesh CreateQuad();
 		UniqueOGLMesh CreateSkyboxCube();
 		UniqueOGLMesh CreateSkyboxQuad();
+
+		void DrawShadowScene(const DirectionLight& light);
 
 		GLuint	CreateTexture(uint32_t width, uint32_t height, GLint internalformat, bool allocMips = false);
 
@@ -66,6 +69,11 @@ namespace Project {
 		SharedOGLMesh sphereMesh;
 
 		OGLShader defaultShader = OGLShader("UniversalVertex.glsl", "UniversalFragment.glsl");
+		OGLShader shadowShader = OGLShader("ShadowVertex.glsl", "ShadowFragment.glsl");
+
+		SharedOGLTexture shadowTex;
+		GLuint shadowFBO; //maybe FBO class in future? better understanding of workings and uses needed
+		StructuredOGLBuffer<NCL::Rendering::FrameConstants> shadowUBO; 
 
 		Camera* defaultCamera;
 

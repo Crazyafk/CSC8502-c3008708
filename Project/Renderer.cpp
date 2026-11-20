@@ -12,11 +12,19 @@ namespace NCL::Rendering {
 #include "./Shaders/LightStructs.h"
 }
 
+#define SHADOWSIZE 2048
+
 using namespace Project;
 using namespace NCL;
 using namespace Rendering;
 
-Renderer::Renderer() : OGLRenderer(*Window::GetWindow()) {
+Renderer::Renderer() : OGLRenderer(*Window::GetWindow()),
+	shadowUBO(1)
+	{
+	if (!defaultShader.LoadSuccess() || !shadowShader.LoadSuccess()) {
+		return;
+	}
+
 	GLTFLoader::SetTextureConstructionFunction(
 		[&](std::string& input) ->  SharedTexture {
 			return std::shared_ptr<Texture>(OGLTexture::TextureFromFile(input));
@@ -40,6 +48,23 @@ Renderer::Renderer() : OGLRenderer(*Window::GetWindow()) {
 
 	defaultCamera->SetController(*controller);
 
+	// SHADOW SETUP SECTION
+	glBindTexture(GL_TEXTURE_2D, shadowTex->GetObjectID());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		SHADOWSIZE, SHADOWSIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenFramebuffers(1, &shadowFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+		GL_TEXTURE_2D, shadowTex->GetObjectID(), 0);
+	glDrawBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// END SHADOW SETUP SECTION
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -140,6 +165,32 @@ UniqueOGLMesh Renderer::CreateSkyboxCube() {
 	skyMesh->UploadToGPU(this);
 
 	return skyMesh;
+}
+
+void Renderer::DrawShadowScene(const DirectionLight& light) {
+	if (!light.HasShadows());
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, SHADOWSIZE, SHADOWSIZE);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+	BindShader(shadowShader);
+
+	BindBufferAsUBO(shadowUBO, 2); //2 Matches the binding hard-coded binding in ShadowVertex.glsl
+
+	shadowUBO.elements[0].viewMatrix = Matrix::View(light.GetShadowMapOrigin(), Vector3(0, 0, 0));
+	shadowUBO.elements[0].projMatrix = Matrix::Perspective(1.0f, 100.0f, 1, 45);
+	shadowUBO.elements[0].viewProjMatrix = shadowUBO.elements[0].projMatrix * shadowUBO.elements[0].viewMatrix;
+	shadowUBO.elements[0].frameTime = frameTime;
+	shadowUBO.elements[0].totalTime = totalRunTime;
+
+	shadowUBO.GPUSync();
+
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	Vector2i viewDimensions = hostWindow.GetScreenSize();
+	glViewport(0, 0, viewDimensions.x, viewDimensions.y);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Renderer::CalculateNormals(Mesh& m) const {
