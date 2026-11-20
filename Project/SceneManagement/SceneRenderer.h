@@ -36,7 +36,6 @@ namespace Project {
 		void DrawNode(SharedNode node);
 		void AnimateNode(SharedNode node);
 
-		OGLShader shader;
 		SharedScene scene;
 		std::unique_ptr<PointLight> light;
 		StructuredOGLBuffer<FrameConstants> frameConstants;

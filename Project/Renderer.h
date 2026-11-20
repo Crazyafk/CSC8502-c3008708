@@ -65,6 +65,8 @@ namespace Project {
 		UniqueOGLMesh quadMesh;			
 		SharedOGLMesh sphereMesh;
 
+		OGLShader defaultShader = OGLShader("UniversalVertex.glsl", "UniversalFragment.glsl");
+
 		Camera* defaultCamera;
 
 		Controller* controller;

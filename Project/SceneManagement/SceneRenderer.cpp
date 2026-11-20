@@ -14,8 +14,7 @@ typedef std::shared_ptr<Scene> SharedScene;
 typedef std::shared_ptr<SceneNode> SharedNode;
 
 SceneRenderer::SceneRenderer() : Renderer(),
-	frameConstants(1),
-	shader("UniversalVertex.glsl", "UniversalFragment.glsl")
+frameConstants(1)
 {
 	scene = std::make_shared<Scene>();
 
@@ -29,7 +28,7 @@ void SceneRenderer::RenderFrame() {
 	RenderSkybox();
 	scene->Update(frameTime);
 
-	BindShader(shader);
+	BindShader(defaultShader);
 	UploadLightUniforms();
 
 	BuildNodeLists(scene->GetRoot());
