@@ -5,7 +5,7 @@ const float gloss = 60.0f;
 const vec3 point_factors = vec3(1.0f, 0.33f, 0f);
 const vec3 direction_factors = vec3(1.0f, 0.33f, 0.1f);
 
-void phong_general(in vec4 diffuseColour, in int lightIndex, vec3 incident, float attenuation, vec3 factors, out vec4 resultColour)
+void phong_general(in vec4 diffuseColour, in int lightIndex, vec3 incident, float attenuation, float shadow, vec3 factors, out vec4 resultColour)
 {
 	vec3 lightColour = lights[lightIndex].colour.rgb;
 	vec3 viewDir = normalize(frameConstants.cameraPos - IN.worldPos);
@@ -20,12 +20,13 @@ void phong_general(in vec4 diffuseColour, in int lightIndex, vec3 incident, floa
 
 	vec3 total = diffuseColour.rgb * lambert * attenuation * factors.x;
 	total += (lightColour * specular) * attenuation * factors.y;
+	total *= shadow;
 	total += diffuseColour.rgb * factors.z;
 
 	resultColour = vec4(total, diffuseColour.a);
 }
 
-void phong_point(in vec4 diffuseColour, in int lightIndex, out vec4 resultColour)
+void phong_point(in vec4 diffuseColour, in int lightIndex, float shadow, out vec4 resultColour)
 {
 	vec3 pointLightPos = lights[lightIndex].vec3_A;
 	float pointLightRadius = lights[lightIndex].float_A;
@@ -34,23 +35,23 @@ void phong_point(in vec4 diffuseColour, in int lightIndex, out vec4 resultColour
 	float dist = length(pointLightPos - IN.worldPos);
 	float attenuation = 1.0 - clamp(dist / pointLightRadius, 0.0, 1.0);
 
-	phong_general(diffuseColour, lightIndex, incident, attenuation, point_factors, resultColour); 
+	phong_general(diffuseColour, lightIndex, incident, attenuation, shadow, point_factors, resultColour); 
 }
 
-void phong_direction(in vec4 diffuseColour, in int lightIndex, out vec4 resultColour)
+void phong_direction(in vec4 diffuseColour, in int lightIndex, float shadow, out vec4 resultColour)
 {
 	vec3 incident = lights[lightIndex].vec3_A;
 	
-	phong_general(diffuseColour, lightIndex, incident, 1.0f, direction_factors, resultColour);
+	phong_general(diffuseColour, lightIndex, incident, 1.0f, shadow, direction_factors, resultColour);
 }
 
-void phong(in vec4 diffuseColour, out vec4 resultColour)
+void phong(in vec4 diffuseColour, float shadow, out vec4 resultColour)
 {
 	for(int i = 0; i < max_lights; i++)
 	{
 		vec4 lightContribution = vec4 (0, 0, 0, 0);
-		if(lights[i].type == LightType_Point) { phong_point(diffuseColour, i, lightContribution); }
-		else if(lights[i].type == LightType_Direction) { phong_direction(diffuseColour, i, lightContribution); }
+		if(lights[i].type == LightType_Point) { phong_point(diffuseColour, i, shadow, lightContribution); }
+		else if(lights[i].type == LightType_Direction) { phong_direction(diffuseColour, i, shadow, lightContribution); }
 		resultColour += lightContribution;
 	}
 }

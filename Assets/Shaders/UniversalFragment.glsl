@@ -29,6 +29,7 @@ in Vertex {
 out vec4 fragColour;
 
 #include "phong.glslh"
+#include "shadowing.glslh"
 
 void main(void) {
 	vec4 diffuseColour;
@@ -38,5 +39,6 @@ void main(void) {
 	else{
 		diffuseColour = albedoColour;
 	}
-	phong(diffuseColour, fragColour);
+	float shadow = findShadowFactor();
+	phong(diffuseColour, shadow, fragColour);
 }
