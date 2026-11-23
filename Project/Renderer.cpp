@@ -323,53 +323,46 @@ GLuint	Renderer::CreateTexture(uint32_t width, uint32_t height, GLint internalFo
 	return tex;
 }
 
-void Renderer::SetUniform(const std::string& name, const Matrix4& mat, int arrayLength) {
+bool Renderer::GetUniformLocation(const std::string& name, GLint& locationOut) {
 	assert(m_boundShader);
 	GLuint id = m_boundShader->GetProgramID();
-	GLint  location = glGetUniformLocation(id, name.c_str());
-	if (location == -1) {
-		return;
-	}
+	locationOut = glGetUniformLocation(id, name.c_str());
+	return (locationOut != -1);
+}
+
+void Renderer::SetUniform(const std::string& name, const Matrix4& mat, int arrayLength) {
+	GLint location = -1;
+	if (!GetUniformLocation(name, location)) return;
 	glUniformMatrix4fv(location, arrayLength, false, (float*)&mat);
 }
 
 void Renderer::SetUniform(const std::string& name, const Vector4& v) {
-	assert(m_boundShader);
-	GLuint id = m_boundShader->GetProgramID();
-	GLint  location = glGetUniformLocation(id, name.c_str());
-	if (location == -1) {
-		return;
-	}
+	GLint location = -1;
+	if (!GetUniformLocation(name, location)) return;
 	glUniform4f(location, v.x, v.y, v.z, v.w);
 }
 
+void Renderer::SetUniform(const std::string& name, const Vector3& v) {
+	GLint location = -1;
+	if (!GetUniformLocation(name, location)) return;
+	glUniform3f(location, v.x, v.y, v.z);
+}
+
 void Renderer::SetUniform(const std::string& name, const Vector2& v) {
-	assert(m_boundShader);
-	GLuint id = m_boundShader->GetProgramID();
-	GLint  location = glGetUniformLocation(id, name.c_str());
-	if (location == -1) {
-		return;
-	}
+	GLint location = -1;
+	if (!GetUniformLocation(name, location)) return;
 	glUniform2f(location, v.x, v.y);
 }
 
 void Renderer::SetUniform(const std::string& name, int i) {
-	assert(m_boundShader);
-	GLuint id = m_boundShader->GetProgramID();
-	GLint  location = glGetUniformLocation(id, name.c_str());
-	if (location == -1) {
-		return;
-	}
+	GLint location = -1;
+	if (!GetUniformLocation(name, location)) return;
 	glUniform1i(location, i);
 }
 
 void Renderer::SetUniform(const std::string& name, float f) {
-	assert(m_boundShader);
-	GLuint id = m_boundShader->GetProgramID();
-	GLint  location = glGetUniformLocation(id, name.c_str());
-	if (location == -1) {
-		return;
-	}
+	GLint location = -1;
+	if (!GetUniformLocation(name, location)) return;
 	glUniform1f(location, f);
 }
 
