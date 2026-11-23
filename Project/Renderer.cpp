@@ -167,7 +167,7 @@ UniqueOGLMesh Renderer::CreateSkyboxCube() {
 	return skyMesh;
 }
 
-void Renderer::DrawShadowScene(const DirectionLight& light) {
+void Renderer::DrawShadowScene(const DirectionLight& light, Matrix4& outShadowMatrix) {
 	if (!light.HasShadows()) return;
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
 
@@ -182,6 +182,7 @@ void Renderer::DrawShadowScene(const DirectionLight& light) {
 	shadowUBO.elements[0].viewMatrix = Matrix::View(light.GetShadowMapOrigin(), Vector3(0, 0, 0));
 	shadowUBO.elements[0].projMatrix = Matrix::Perspective(1.0f, 100.0f, 1, 45);
 	shadowUBO.elements[0].viewProjMatrix = shadowUBO.elements[0].projMatrix * shadowUBO.elements[0].viewMatrix;
+	outShadowMatrix = shadowUBO.elements[0].viewProjMatrix;
 	shadowUBO.elements[0].frameTime = frameTime;
 	shadowUBO.elements[0].totalTime = totalRunTime;
 

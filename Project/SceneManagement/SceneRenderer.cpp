@@ -33,7 +33,7 @@ void SceneRenderer::RenderFrame() {
 	BuildNodeLists(scene->GetRoot());
 	SortNodeLists();
 
-	DrawShadowScene(*shadowingLight);
+	DrawShadowScene(*shadowingLight, frameConstants.elements[0].shadowMatrix);
 	glClear(GL_DEPTH_BUFFER_BIT); //shouldn't be needed. mysteryyyyy :3
 
 	BindShader(defaultShader);

@@ -4,6 +4,7 @@
 
 uniform mat4 modelMatrix;
 uniform bool isAnimated;
+
 uniform int debug_nodeID;
 uniform float debug_distanceFromCamera;
 
@@ -12,12 +13,14 @@ layout (std140, binding = 0) uniform Constants {
 };
 
 uniform mat4 joints[128];
+uniform vec3 shadowingOriginPos;
 
 out Vertex {
     vec4 colour;
     vec2 texCoord;
     vec3 normal;
     vec3 worldPos;
+    vec4 shadowProj;
 } OUT;
 
 #include "AnimateSkeletal.glsl"
@@ -41,4 +44,9 @@ void main(void) {
 
     mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
     OUT.normal = normalize(normalMatrix * normalize(normal));
+
+    //anti-acne shadow biasing
+    vec3 viewDir = normalize(shadowingOriginPos - worldPos.xyz);
+    vec4 pushVal = vec4(OUT.normal, 0) * dot(viewDir, OUT.normal);
+    OUT.shadowProj = frameConstants.shadowMatrix * (worldPos + pushVal);
 }

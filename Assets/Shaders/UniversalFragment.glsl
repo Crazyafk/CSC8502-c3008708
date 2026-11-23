@@ -23,6 +23,7 @@ in Vertex {
     vec2 texCoord;
     vec3 normal;
     vec3 worldPos;
+	vec4 shadowProj;
 } IN;
 
 out vec4 fragColour;

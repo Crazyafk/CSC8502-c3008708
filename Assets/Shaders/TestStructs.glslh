@@ -2,7 +2,8 @@
 struct FrameConstants {
     mat4 projMatrix;
     mat4 viewMatrix;
-    mat4 viewProjMatrix; 
+    mat4 viewProjMatrix;
+    mat4 shadowMatrix;
 
     float frameTime;
     float totalTime;

@@ -33,6 +33,9 @@ namespace Project {
 		shadowingLight = static_pointer_cast<DirectionLight>(lights[2]);
 		shadowingLight->AddShadows(Vector3(0, 50, 0));
 
+		BindShader(defaultShader);
+		SetUniform("shadowingOriginPos", shadowingLight->GetShadowMapOrigin());
+
 		GLTFScene tempSceneA;
 		GLTFLoader::Load("../GLTF/CesiumMan/CesiumMan.gltf", tempSceneA);
 		SharedNode cesiumMan = SceneNode::FromGLTFScene(tempSceneA, scene);
