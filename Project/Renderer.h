@@ -40,14 +40,18 @@ namespace Project {
 		Camera& GetDefaultCamera() { return *defaultCamera; }
 	protected:
 		virtual void BehaviourUpdate() {};
+		virtual void ShadowDrawCallback(const DirectionLight& light) {};
+		virtual void PostProcess() { finalTex = sceneTex; }; //do nothing
+
 		UniqueOGLMesh CreateTriangle();
 		UniqueOGLMesh CreateQuad();
 		UniqueOGLMesh CreateSkyboxCube();
 		UniqueOGLMesh CreateScreenQuad();
 
 		void DrawShadowScene(const DirectionLight& light, Matrix4& outShadowMatrix);
-		virtual void ShadowDrawCallback(const DirectionLight& light) {};
 		void UploadShadowTex();
+		void PreSceneDraw();
+		void PresentToScreen();
 
 		GLuint	CreateTexture(uint32_t width, uint32_t height, GLint internalformat, bool allocMips = false);
 
@@ -70,17 +74,21 @@ namespace Project {
 		void CalculateNormals(Mesh& m) const;
 		void CalculateNormalsTangents(Mesh& m) const;
 
-		UniqueOGLMesh triMesh;			
-		UniqueOGLMesh quadMesh;			
-		SharedOGLMesh sphereMesh;
+		UniqueOGLMesh screenQuad;
 
 		OGLShader defaultShader = OGLShader("UniversalVertex.glsl", "UniversalFragment.glsl");
 		OGLShader shadowShader = OGLShader("ShadowVertex.glsl", "ShadowFragment.glsl");
+		OGLShader screenShader = OGLShader("ScreenVertex.glsl", "TexturedFragment.glsl");
 
 		SharedOGLTexture shadowTex = std::make_shared<OGLTexture>();
 		SharedFrameBuffer shadowFBO;
 		StructuredOGLBuffer<NCL::Rendering::FrameConstants> shadowUBO; 
 		bool drawingShadows = false;
+
+		SharedOGLTexture sceneTex = std::make_shared<OGLTexture>();
+		SharedOGLTexture sceneDepth = std::make_shared<OGLTexture>();
+		SharedFrameBuffer sceneFBO;
+		SharedOGLTexture finalTex;
 
 		Camera* defaultCamera;
 

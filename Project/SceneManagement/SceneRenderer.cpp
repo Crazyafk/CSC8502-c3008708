@@ -25,7 +25,6 @@ frameConstants(1)
 
 void SceneRenderer::RenderFrame() {
 	UpdateUBO();
-	RenderSkybox();
 	scene->Update(frameTime);
 
 	UploadLightUniforms();
@@ -37,9 +36,14 @@ void SceneRenderer::RenderFrame() {
 	glClear(GL_DEPTH_BUFFER_BIT); //shouldn't be needed. mysteryyyyy :3
 	UpdateUBO();
 
+	PreSceneDraw();
+	RenderSkybox();
+	glClear(GL_DEPTH_BUFFER_BIT);
 	BindShader(defaultShader);
 	UploadShadowTex();
 	DrawNodes();
+	PostProcess();
+	PresentToScreen();
 
 	ClearNodeLists();
 }

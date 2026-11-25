@@ -35,6 +35,8 @@ Renderer::Renderer() : OGLRenderer(*Window::GetWindow()),
 		[&]()-> std::shared_ptr<Mesh> {return std::shared_ptr<Mesh>(new OGLMesh()); }
 	);
 
+	screenQuad = CreateScreenQuad();
+
 	defaultCamera = new PerspectiveCamera();
 
 	controller = new KeyboardMouseController(*Window::GetWindow()->GetKeyboard(), *Window::GetWindow()->GetMouse());
@@ -47,6 +49,27 @@ Renderer::Renderer() : OGLRenderer(*Window::GetWindow()),
 	controller->MapAxis(4, "YLook");
 
 	defaultCamera->SetController(*controller);
+
+	// SCENE FBO
+	Vector2i viewDimensions = hostWindow.GetScreenSize();
+
+	glBindTexture(GL_TEXTURE_2D, sceneTex->GetObjectID());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
+		viewDimensions.x, viewDimensions.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindTexture(GL_TEXTURE_2D, sceneDepth->GetObjectID());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		viewDimensions.x, viewDimensions.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	sceneFBO = std::make_shared<FrameBuffer>(sceneTex, sceneDepth, nullptr);
 
 	// SHADOW SETUP SECTION
 	glBindTexture(GL_TEXTURE_2D, shadowTex->GetObjectID());
@@ -123,6 +146,12 @@ UniqueOGLMesh Renderer::CreateScreenQuad() {
 
 	skyMesh->SetVertexIndices({
 		0,1,3,2
+		});
+	skyMesh->SetVertexTextureCoords({
+		Vector2(0, 0),
+		Vector2(1, 0),
+		Vector2(1, 1),
+		Vector2(0, 1)
 		});
 
 	skyMesh->SetDebugName("Screen Quad");
@@ -201,6 +230,25 @@ void Renderer::UploadShadowTex() {
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, shadowTex->GetObjectID());
 	drawingShadows = false;
+}
+
+void Renderer::PreSceneDraw() {
+	sceneFBO->Bind();
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT |
+			GL_STENCIL_BUFFER_BIT);
+}
+
+void Renderer::PresentToScreen() {
+	FrameBuffer::Unbind();
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	BindShader(screenShader);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, finalTex->GetObjectID());
+	SetUniform("diffuseTex", 0);
+	BindMesh(*static_cast<OGLMesh*>(screenQuad.get()));
+	DrawBoundMesh();
 }
 
 void Renderer::CalculateNormals(Mesh& m) const {
