@@ -57,12 +57,7 @@ Renderer::Renderer() : OGLRenderer(*Window::GetWindow()),
 		SHADOWSIZE, SHADOWSIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	shadowFBO = std::make_shared<FrameBuffer>();
-	shadowFBO->Bind();
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-		GL_TEXTURE_2D, shadowTex->GetObjectID(), 0);
-	glDrawBuffer(GL_NONE);
-	FrameBuffer::Unbind();
+	shadowFBO = std::make_shared<FrameBuffer>(nullptr, shadowTex, nullptr);
 
 	// END SHADOW SETUP SECTION
 	glEnable(GL_DEPTH_TEST);
