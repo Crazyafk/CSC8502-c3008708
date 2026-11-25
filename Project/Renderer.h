@@ -43,7 +43,7 @@ namespace Project {
 		UniqueOGLMesh CreateTriangle();
 		UniqueOGLMesh CreateQuad();
 		UniqueOGLMesh CreateSkyboxCube();
-		UniqueOGLMesh CreateSkyboxQuad();
+		UniqueOGLMesh CreateScreenQuad();
 
 		void DrawShadowScene(const DirectionLight& light, Matrix4& outShadowMatrix);
 		virtual void ShadowDrawCallback(const DirectionLight& light) {};

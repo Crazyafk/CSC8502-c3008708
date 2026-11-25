@@ -112,7 +112,7 @@ UniqueOGLMesh Renderer::CreateQuad() {
 	return quadMesh;
 }
 
-UniqueOGLMesh Renderer::CreateSkyboxQuad() {
+UniqueOGLMesh Renderer::CreateScreenQuad() {
 	UniqueOGLMesh skyMesh = std::make_unique<OGLMesh>();
 	skyMesh->SetVertexPositions({
 		Vector3(-1, -1, -1),
@@ -125,7 +125,7 @@ UniqueOGLMesh Renderer::CreateSkyboxQuad() {
 		0,1,3,2
 		});
 
-	skyMesh->SetDebugName("Skybox Quad");
+	skyMesh->SetDebugName("Screen Quad");
 	skyMesh->SetPrimitiveType(NCL::GeometryPrimitive::TriangleStrip);
 	skyMesh->UploadToGPU(this);
 
