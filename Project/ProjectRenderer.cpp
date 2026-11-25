@@ -76,6 +76,10 @@ namespace Project {
 
 	void ProjectRenderer::BehaviourUpdate() {
 		UpdateCameraPath();
+		Vector3 camPos = defaultCamera->GetPosition();
+
+		// need +1 on x and z axis to avoid straight-vertical bug with view matrix creation
+		if(shadowingLight) shadowingLight->AddShadows(camPos + Vector3(1,100,1));
 	}
 
 	void ProjectRenderer::UpdateCameraPath() {

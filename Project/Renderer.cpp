@@ -179,8 +179,9 @@ void Renderer::DrawShadowScene(const DirectionLight& light, Matrix4& outShadowMa
 
 	BindBufferAsUBO(shadowUBO, 2); //2 Matches the binding hard-coded binding in ShadowVertex.glsl
 
-	shadowUBO.elements[0].viewMatrix = Matrix::View(light.GetShadowMapOrigin(), Vector3(0, 0, 0));
-	shadowUBO.elements[0].projMatrix = Matrix::Perspective(1.0f, 100.0f, 1, 45);
+	Vector3 camPos = defaultCamera->GetPosition();
+	shadowUBO.elements[0].viewMatrix = Matrix::View(light.GetShadowMapOrigin(), Vector3(camPos.x, 0, camPos.z));
+	shadowUBO.elements[0].projMatrix = Matrix::Perspective(1.0f, 1000.0f, 1, 45);
 	shadowUBO.elements[0].viewProjMatrix = shadowUBO.elements[0].projMatrix * shadowUBO.elements[0].viewMatrix;
 	outShadowMatrix = shadowUBO.elements[0].viewProjMatrix;
 	shadowUBO.elements[0].frameTime = frameTime;
