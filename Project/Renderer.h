@@ -12,6 +12,8 @@
 #include "../NCLCoreClasses/Camera.h"
 #include "../NCLCoreClasses/Window.h"
 
+#include "FrameBuffer.h"
+
 #include "Lighting/Light.h"
 #include "Lighting/PointLight.h"
 #include "Lighting/DirectionLight.h"
@@ -76,7 +78,7 @@ namespace Project {
 		OGLShader shadowShader = OGLShader("ShadowVertex.glsl", "ShadowFragment.glsl");
 
 		SharedOGLTexture shadowTex = std::make_shared<OGLTexture>();
-		GLuint shadowFBO; //maybe FBO class in future? better understanding of workings and uses needed
+		SharedFrameBuffer shadowFBO;
 		StructuredOGLBuffer<NCL::Rendering::FrameConstants> shadowUBO; 
 		bool drawingShadows = false;
 

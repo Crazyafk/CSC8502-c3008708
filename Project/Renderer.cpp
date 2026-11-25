@@ -57,12 +57,12 @@ Renderer::Renderer() : OGLRenderer(*Window::GetWindow()),
 		SHADOWSIZE, SHADOWSIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glGenFramebuffers(1, &shadowFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	shadowFBO = std::make_shared<FrameBuffer>();
+	shadowFBO->Bind();
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
 		GL_TEXTURE_2D, shadowTex->GetObjectID(), 0);
 	glDrawBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	FrameBuffer::Unbind();
 
 	// END SHADOW SETUP SECTION
 	glEnable(GL_DEPTH_TEST);
@@ -169,7 +169,7 @@ UniqueOGLMesh Renderer::CreateSkyboxCube() {
 
 void Renderer::DrawShadowScene(const DirectionLight& light, Matrix4& outShadowMatrix) {
 	if (!light.HasShadows()) return;
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	shadowFBO->Bind();
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, SHADOWSIZE, SHADOWSIZE);
@@ -195,7 +195,7 @@ void Renderer::DrawShadowScene(const DirectionLight& light, Matrix4& outShadowMa
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	Vector2i viewDimensions = hostWindow.GetScreenSize();
 	glViewport(0, 0, viewDimensions.x, viewDimensions.y);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	FrameBuffer::Unbind();
 }
 
 void Renderer::UploadShadowTex() {
