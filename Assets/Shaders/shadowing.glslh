@@ -1,7 +1,7 @@
 //to be included in a fragment shader, not used standalone
 
 float findShadowFactor(void) {
-	if (!hasShadows) { return 0.0; }
+	if (!hasShadows) { return 1.0; }
 	float shadow = 1.0;
 
 	vec3 shadowNDC = IN.shadowProj.xyz / IN.shadowProj.w;
